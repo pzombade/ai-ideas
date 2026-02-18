@@ -1,0 +1,1168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Learn & Play! 🌈</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #FFF8EE;
+    --tab-letters:  #FF6B6B;
+    --tab-numbers:  #4D96FF;
+    --tab-weekdays: #6BCB77;
+    --tab-months:   #C56BFF;
+  }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--bg);
+    min-height: 100vh;
+    padding: 14px 12px 30px;
+    background-image:
+      radial-gradient(circle at 10% 10%, rgba(255,200,100,0.15) 0%, transparent 40%),
+      radial-gradient(circle at 90% 90%, rgba(100,200,255,0.15) 0%, transparent 40%),
+      radial-gradient(circle at 80% 10%, rgba(255,150,200,0.12) 0%, transparent 40%);
+  }
+
+  /* ── Header ── */
+  header {
+    text-align: center;
+    margin-bottom: 10px;
+    position: relative;
+  }
+  header h1 {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(2rem, 7vw, 3.2rem);
+    background: linear-gradient(135deg, #FF6B6B, #FFD93D, #6BCB77, #4D96FF);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(2px 3px 0 rgba(0,0,0,0.08));
+    line-height: 1.1;
+  }
+  header p {
+    font-size: 0.82rem;
+    color: #999;
+    margin-top: 2px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  /* ── Top Controls Bar ── */
+  .top-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+  }
+
+  /* Music toggle */
+  .btn-music {
+    font-family: 'Fredoka One', cursive;
+    font-size: 0.88rem;
+    border: none;
+    border-radius: 50px;
+    padding: 8px 16px;
+    cursor: pointer;
+    background: #FFD93D;
+    color: #7a5800;
+    box-shadow: 0 4px 0 #cc9900;
+    transition: transform 0.1s, box-shadow 0.1s, background 0.2s;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .btn-music:active { transform: translateY(3px); box-shadow: 0 1px 0 #cc9900; }
+  .btn-music.on  { background: #FFD93D; }
+  .btn-music.off { background: #ddd; color: #888; box-shadow: 0 4px 0 #aaa; }
+
+  /* Spell-out toggle */
+  .spell-toggle-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #fff;
+    border-radius: 50px;
+    padding: 7px 14px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    font-size: 0.82rem;
+    font-weight: 900;
+    color: #555;
+  }
+  .spell-toggle-wrap span { white-space: nowrap; }
+
+  .toggle-switch {
+    position: relative;
+    width: 44px; height: 24px;
+    cursor: pointer;
+  }
+  .toggle-switch input { display: none; }
+  .toggle-track {
+    position: absolute;
+    inset: 0;
+    background: #ddd;
+    border-radius: 50px;
+    transition: background 0.2s;
+  }
+  .toggle-switch input:checked + .toggle-track { background: #6BCB77; }
+  .toggle-knob {
+    position: absolute;
+    top: 3px; left: 3px;
+    width: 18px; height: 18px;
+    background: #fff;
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    transition: transform 0.2s;
+  }
+  .toggle-switch input:checked ~ .toggle-knob { transform: translateX(20px); }
+
+  /* ── Tab Bar ── */
+  .tabs {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+  }
+  .tab-btn {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(0.78rem, 2.2vw, 0.95rem);
+    border: none;
+    border-radius: 50px;
+    padding: 9px 16px;
+    cursor: pointer;
+    color: #fff;
+    opacity: 0.48;
+    box-shadow: 0 4px 0 rgba(0,0,0,0.15);
+    transition: opacity 0.15s, transform 0.15s, box-shadow 0.15s;
+  }
+  .tab-btn:hover  { opacity: 0.72; }
+  .tab-btn.active { opacity: 1; transform: translateY(-2px); box-shadow: 0 6px 0 rgba(0,0,0,0.18); }
+  .tab-btn[data-tab="letters"]  { background: var(--tab-letters); }
+  .tab-btn[data-tab="numbers"]  { background: var(--tab-numbers); }
+  .tab-btn[data-tab="weekdays"] { background: var(--tab-weekdays); }
+  .tab-btn[data-tab="months"]   { background: var(--tab-months); }
+
+  /* ── Section ── */
+  .section-panel { display: none; }
+  .section-panel.active { display: block; }
+
+  /* Section top row: title + Read All + progress */
+  .section-header {
+    max-width: 800px;
+    margin: 0 auto 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .section-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1rem;
+    color: #bbb;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+
+  /* Read All button */
+  .btn-read-all {
+    font-family: 'Fredoka One', cursive;
+    font-size: 0.9rem;
+    border: none;
+    border-radius: 50px;
+    padding: 9px 18px;
+    cursor: pointer;
+    color: #fff;
+    box-shadow: 0 4px 0 rgba(0,0,0,0.2);
+    display: flex; align-items: center; gap: 6px;
+    transition: transform 0.1s, box-shadow 0.1s;
+  }
+  .btn-read-all:hover  { transform: translateY(-2px); box-shadow: 0 6px 0 rgba(0,0,0,0.2); }
+  .btn-read-all:active { transform: translateY(2px);  box-shadow: 0 2px 0 rgba(0,0,0,0.2); }
+  .btn-read-all.letters-color  { background: var(--tab-letters);  box-shadow: 0 4px 0 #c0392b; }
+  .btn-read-all.numbers-color  { background: var(--tab-numbers);  box-shadow: 0 4px 0 #1a6bbf; }
+  .btn-read-all.weekdays-color { background: var(--tab-weekdays); box-shadow: 0 4px 0 #1e8449; }
+  .btn-read-all.months-color   { background: var(--tab-months);   box-shadow: 0 4px 0 #7d3c98; }
+  .btn-read-all.stop { background: #FF4757 !important; box-shadow: 0 4px 0 #c0392b !important; }
+
+  /* Progress bar */
+  .progress-wrap {
+    max-width: 800px;
+    margin: 0 auto 12px;
+    background: rgba(0,0,0,0.06);
+    border-radius: 50px;
+    height: 14px;
+    overflow: hidden;
+    position: relative;
+  }
+  .progress-bar {
+    height: 100%;
+    border-radius: 50px;
+    transition: width 0.4s ease;
+    background: linear-gradient(90deg, #FFD93D, #FF6B6B);
+    min-width: 0;
+  }
+  .progress-label {
+    position: absolute;
+    right: 8px; top: 0;
+    font-size: 0.62rem;
+    font-weight: 900;
+    color: rgba(0,0,0,0.4);
+    line-height: 14px;
+  }
+  .progress-stars {
+    max-width: 800px;
+    margin: 0 auto 10px;
+    text-align: right;
+    font-size: 0.75rem;
+    color: #FFD93D;
+    font-weight: 900;
+    letter-spacing: 1px;
+    min-height: 18px;
+  }
+
+  /* ── Grids ── */
+  .grid {
+    display: grid;
+    gap: 10px;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  .grid-letters  { grid-template-columns: repeat(auto-fill, minmax(82px,  1fr)); }
+  .grid-numbers  { grid-template-columns: repeat(auto-fill, minmax(90px,  1fr)); }
+  .grid-weekdays { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); }
+  .grid-months   { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); }
+
+  /* ── Tiles ── */
+  .tile {
+    border-radius: 18px;
+    padding: 12px 6px 10px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    border: 3px solid rgba(255,255,255,0.55);
+    box-shadow: 0 5px 0 rgba(0,0,0,0.13), 0 7px 18px rgba(0,0,0,0.07);
+    transition: transform 0.12s, box-shadow 0.12s, outline 0.1s;
+    user-select: none;
+    position: relative;
+    overflow: hidden;
+  }
+  .tile::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 38%;
+    background: rgba(255,255,255,0.22);
+    border-radius: 15px 15px 60% 60%;
+  }
+  .tile:hover  { transform: translateY(-4px) scale(1.05); box-shadow: 0 9px 0 rgba(0,0,0,0.13), 0 14px 24px rgba(0,0,0,0.1); }
+  .tile:active { transform: translateY(2px) scale(0.97); box-shadow: 0 2px 0 rgba(0,0,0,0.12); }
+
+  /* Highlighted tile during Read All */
+  .tile.reading {
+    outline: 4px solid #FFD93D;
+    outline-offset: 2px;
+    transform: translateY(-5px) scale(1.08) !important;
+    box-shadow: 0 10px 0 rgba(0,0,0,0.13), 0 16px 30px rgba(255,215,0,0.3) !important;
+    z-index: 2;
+  }
+
+  /* Visited tile tick */
+  .tile.visited::after {
+    content: '✓';
+    position: absolute;
+    top: 5px; right: 7px;
+    font-size: 0.65rem;
+    font-weight: 900;
+    color: rgba(255,255,255,0.9);
+    background: rgba(0,0,0,0.18);
+    border-radius: 50%;
+    width: 16px; height: 16px;
+    display: flex; align-items: center; justify-content: center;
+    line-height: 16px;
+    text-align: center;
+  }
+
+  .tile .t-main  { font-family: 'Fredoka One', cursive; font-size: 2.1rem; color:#fff; text-shadow: 2px 3px 0 rgba(0,0,0,0.14); line-height:1; }
+  .tile .t-emoji { font-size: 1.25rem; line-height: 1; }
+  .tile .t-sub   { font-size: 0.58rem; font-weight:900; color:rgba(255,255,255,0.88); text-transform:uppercase; letter-spacing:1px; }
+
+  .col-red    { background: linear-gradient(155deg,#FF6B6B,#FF4757); }
+  .col-orange { background: linear-gradient(155deg,#FF9F43,#FF6348); }
+  .col-yellow { background: linear-gradient(155deg,#FFD93D,#FFAA00); }
+  .col-green  { background: linear-gradient(155deg,#6BCB77,#2ECC71); }
+  .col-blue   { background: linear-gradient(155deg,#4D96FF,#2E86DE); }
+  .col-purple { background: linear-gradient(155deg,#C56BFF,#9B59B6); }
+  .col-pink   { background: linear-gradient(155deg,#FF6EB4,#FF2D78); }
+  .col-teal   { background: linear-gradient(155deg,#00CEC9,#00A896); }
+
+  /* ── Modal ── */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    backdrop-filter: blur(6px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.22s ease;
+    padding: 16px;
+  }
+  .modal-overlay.active { opacity: 1; pointer-events: all; }
+
+  .modal {
+    background: #fff;
+    border-radius: 30px;
+    padding: 26px 22px 22px;
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    position: relative;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.22);
+    transform: scale(0.85) translateY(20px);
+    transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+    max-height: 92vh;
+    overflow-y: auto;
+  }
+  .modal-overlay.active .modal { transform: scale(1) translateY(0); }
+
+  .modal-band { position: absolute; top: 0; left: 0; right: 0; height: 8px; border-radius: 28px 28px 0 0; }
+
+  .btn-close {
+    position: absolute; top: 13px; right: 13px;
+    width: 36px; height: 36px;
+    border-radius: 50%; border: none;
+    background: #F0F0F0; font-size: 1.1rem; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.15s, transform 0.15s;
+    color: #555; font-weight: 900;
+  }
+  .btn-close:hover { background: #FFD93D; transform: scale(1.1) rotate(90deg); }
+
+  .modal-main-label {
+    font-family: 'Fredoka One', cursive;
+    font-size: 5rem; line-height: 1; margin-top: 10px;
+    background: linear-gradient(135deg,#FF6B6B,#4D96FF);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    filter: drop-shadow(3px 4px 0 rgba(0,0,0,0.07));
+  }
+  .modal-word-label {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.55rem; color: #444; letter-spacing: 3px; margin: 4px 0 8px;
+  }
+  .modal-emoji-sprite {
+    font-size: 5rem; line-height: 1; margin: 4px 0 8px; display: block;
+    animation: popIn 0.45s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  .count-grid {
+    display: flex; flex-wrap: wrap; justify-content: center; align-items: center;
+    gap: 4px; margin: 6px auto 10px; max-width: 320px; min-height: 60px;
+  }
+
+  @keyframes popIn {
+    0%   { transform: scale(0.5) translateY(16px); opacity: 0; }
+    100% { transform: scale(1) translateY(0); opacity: 1; }
+  }
+
+  .btn-speak {
+    background: linear-gradient(135deg,#6BCB77,#2ECC71);
+    color: #fff; border: none; border-radius: 50px;
+    padding: 11px 26px;
+    font-family: 'Fredoka One', cursive; font-size: 1.05rem;
+    cursor: pointer; display: inline-flex; align-items: center; gap: 8px;
+    box-shadow: 0 5px 0 #1aab53, 0 7px 14px rgba(0,0,0,0.13);
+    transition: transform 0.1s, box-shadow 0.1s; margin-bottom: 16px;
+  }
+  .btn-speak:hover  { transform: translateY(-2px); box-shadow: 0 7px 0 #1aab53, 0 10px 20px rgba(0,0,0,0.13); }
+  .btn-speak:active { transform: translateY(3px);  box-shadow: 0 2px 0 #1aab53; }
+  .btn-speak.speaking { background: linear-gradient(135deg,#FFD93D,#FFAA00); box-shadow: 0 5px 0 #cc8800, 0 7px 14px rgba(0,0,0,0.13); }
+
+  .speaking-dots { display:none; justify-content:center; gap:5px; margin-top:2px; height:14px; margin-bottom:10px; }
+  .speaking-dots.visible { display:flex; }
+  .speaking-dots span { width:8px; height:8px; border-radius:50%; background:#6BCB77; animation: dotBounce 0.6s infinite alternate; }
+  .speaking-dots span:nth-child(2) { animation-delay:0.2s; }
+  .speaking-dots span:nth-child(3) { animation-delay:0.4s; }
+  @keyframes dotBounce {
+    from { transform:translateY(0); opacity:0.5; }
+    to   { transform:translateY(-6px); opacity:1; }
+  }
+
+  .nav-row { display:flex; align-items:center; justify-content:center; gap:14px; }
+  .btn-nav {
+    width:50px; height:50px; border-radius:50%; border:none;
+    font-size:1.4rem; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    box-shadow: 0 4px 0 rgba(0,0,0,0.15);
+    transition: transform 0.1s, box-shadow 0.1s; font-weight:900; color:#fff;
+  }
+  .btn-nav:hover  { transform:scale(1.1); }
+  .btn-nav:active { transform:scale(0.95); box-shadow: 0 1px 0 rgba(0,0,0,0.15); }
+  .btn-prev { background:#4D96FF; }
+  .btn-next { background:#FF6B6B; }
+  .nav-counter { font-family:'Fredoka One',cursive; font-size:0.95rem; color:#bbb; min-width:55px; }
+
+  /* ── Well Done Screen ── */
+  .wellDone-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(8px);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 200;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.3s;
+    padding: 20px;
+  }
+  .wellDone-overlay.active { opacity: 1; pointer-events: all; }
+
+  .wellDone-box {
+    background: #fff;
+    border-radius: 36px;
+    padding: 40px 30px 32px;
+    text-align: center;
+    max-width: 380px; width: 100%;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.3);
+    transform: scale(0.7);
+    transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  .wellDone-overlay.active .wellDone-box { transform: scale(1); }
+
+  .wellDone-emoji { font-size: 5rem; line-height: 1; margin-bottom: 12px; display: block;
+    animation: spinBounce 0.6s cubic-bezier(0.34,1.56,0.64,1); }
+  @keyframes spinBounce {
+    0%   { transform: scale(0) rotate(-180deg); }
+    100% { transform: scale(1) rotate(0deg); }
+  }
+  .wellDone-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: 2.8rem;
+    background: linear-gradient(135deg,#FF6B6B,#FFD93D,#6BCB77,#4D96FF);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    margin-bottom: 8px;
+  }
+  .wellDone-sub {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.1rem; color: #aaa; margin-bottom: 24px; letter-spacing: 1px;
+  }
+  .btn-wellDone-close {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.1rem; border: none; border-radius: 50px;
+    padding: 12px 32px; cursor: pointer;
+    background: linear-gradient(135deg,#6BCB77,#2ECC71);
+    color: #fff; box-shadow: 0 5px 0 #1aab53;
+    transition: transform 0.1s;
+  }
+  .btn-wellDone-close:hover { transform: translateY(-2px); }
+
+  /* ── Confetti ── */
+  .confetti-container { position:fixed; inset:0; pointer-events:none; z-index:999; overflow:hidden; }
+  .confetti-piece {
+    position:absolute; border-radius:2px;
+    animation: confettiFall 1.8s ease forwards;
+  }
+  @keyframes confettiFall {
+    0%   { transform:translateY(-20px) rotate(0deg);  opacity:1; }
+    100% { transform:translateY(105vh) rotate(720deg); opacity:0; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🌈 Learn &amp; Play!</h1>
+  <p>Tap anything to learn! 🎉</p>
+</header>
+
+<!-- Top Controls -->
+<div class="top-controls">
+  <button class="btn-music on" id="btnMusic">🎵 Music: ON</button>
+
+  <div class="spell-toggle-wrap">
+    <span>🔤 Spelling</span>
+    <label class="toggle-switch">
+      <input type="checkbox" id="spellToggle" checked>
+      <div class="toggle-track"></div>
+      <div class="toggle-knob"></div>
+    </label>
+    <span id="spellLabel">ON</span>
+  </div>
+</div>
+
+<!-- Tabs -->
+<div class="tabs">
+  <button class="tab-btn active" data-tab="letters">🔤 Letters</button>
+  <button class="tab-btn"        data-tab="numbers">🔢 Numbers</button>
+  <button class="tab-btn"        data-tab="weekdays">📅 Weekdays</button>
+  <button class="tab-btn"        data-tab="months">🗓️ Months</button>
+</div>
+
+<!-- Letters -->
+<div class="section-panel active" id="panel-letters">
+  <div class="section-header">
+    <div class="section-title">🔤 A to Z</div>
+    <button class="btn-read-all letters-color" id="readAll-letters">▶ Read All</button>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog-letters" style="width:0%"></div><span class="progress-label" id="progLabel-letters">0/26</span></div>
+  <div class="progress-stars" id="stars-letters"></div>
+  <div class="grid grid-letters" id="grid-letters"></div>
+</div>
+
+<!-- Numbers -->
+<div class="section-panel" id="panel-numbers">
+  <div class="section-header">
+    <div class="section-title">🔢 1 to 20</div>
+    <button class="btn-read-all numbers-color" id="readAll-numbers">▶ Read All</button>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog-numbers" style="width:0%"></div><span class="progress-label" id="progLabel-numbers">0/20</span></div>
+  <div class="progress-stars" id="stars-numbers"></div>
+  <div class="grid grid-numbers" id="grid-numbers"></div>
+</div>
+
+<!-- Weekdays -->
+<div class="section-panel" id="panel-weekdays">
+  <div class="section-header">
+    <div class="section-title">📅 Weekdays</div>
+    <button class="btn-read-all weekdays-color" id="readAll-weekdays">▶ Read All</button>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog-weekdays" style="width:0%"></div><span class="progress-label" id="progLabel-weekdays">0/7</span></div>
+  <div class="progress-stars" id="stars-weekdays"></div>
+  <div class="grid grid-weekdays" id="grid-weekdays"></div>
+</div>
+
+<!-- Months -->
+<div class="section-panel" id="panel-months">
+  <div class="section-header">
+    <div class="section-title">🗓️ Months</div>
+    <button class="btn-read-all months-color" id="readAll-months">▶ Read All</button>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog-months" style="width:0%"></div><span class="progress-label" id="progLabel-months">0/12</span></div>
+  <div class="progress-stars" id="stars-months"></div>
+  <div class="grid grid-months" id="grid-months"></div>
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <div class="modal-band" id="modalBand"></div>
+    <button class="btn-close" id="btnClose">✕</button>
+    <div class="modal-main-label" id="modalMain"></div>
+    <div class="modal-word-label" id="modalWordLabel"></div>
+    <div class="modal-emoji-sprite" id="modalEmoji"></div>
+    <div class="count-grid" id="countGrid"></div>
+    <button class="btn-speak" id="btnSpeak">🔊 Say It!</button>
+    <div class="speaking-dots" id="speakDots"><span></span><span></span><span></span></div>
+    <div class="nav-row">
+      <button class="btn-nav btn-prev" id="btnPrev">◀</button>
+      <div class="nav-counter" id="navCounter">1 / 26</div>
+      <button class="btn-nav btn-next" id="btnNext">▶</button>
+    </div>
+  </div>
+</div>
+
+<!-- Well Done -->
+<div class="wellDone-overlay" id="wellDoneOverlay">
+  <div class="wellDone-box">
+    <span class="wellDone-emoji">🏆</span>
+    <div class="wellDone-title">Amazing!</div>
+    <div class="wellDone-sub" id="wellDoneSub">You finished all the Letters!</div>
+    <button class="btn-wellDone-close" id="btnWellDoneClose">🎉 Yay! Let's Go!</button>
+  </div>
+</div>
+
+<div class="confetti-container" id="confettiContainer"></div>
+
+<script>
+// ══════════════════════════════════════════════════════
+//  DATA
+// ══════════════════════════════════════════════════════
+const LETTERS = [
+  {letter:'A',emoji:'🍎',word:'Apple'},
+  {letter:'B',emoji:'⚽',word:'Ball'},
+  {letter:'C',emoji:'🐱',word:'Cat'},
+  {letter:'D',emoji:'🐶',word:'Dog'},
+  {letter:'E',emoji:'🐘',word:'Elephant'},
+  {letter:'F',emoji:'🐟',word:'Fish'},
+  {letter:'G',emoji:'🍇',word:'Grapes'},
+  {letter:'H',emoji:'🎩',word:'Hat'},
+  {letter:'I',emoji:'🍦',word:'Ice Cream'},
+  {letter:'J',emoji:'🪼',word:'Jellyfish'},
+  {letter:'K',emoji:'🪁',word:'Kite'},
+  {letter:'L',emoji:'🦁',word:'Lion'},
+  {letter:'M',emoji:'🐒',word:'Monkey'},
+  {letter:'N',emoji:'🪺',word:'Nest'},
+  {letter:'O',emoji:'🍊',word:'Orange'},
+  {letter:'P',emoji:'🐼',word:'Panda'},
+  {letter:'Q',emoji:'👸',word:'Queen'},
+  {letter:'R',emoji:'🌈',word:'Rainbow'},
+  {letter:'S',emoji:'☀️',word:'Sun'},
+  {letter:'T',emoji:'🐯',word:'Tiger'},
+  {letter:'U',emoji:'☂️',word:'Umbrella'},
+  {letter:'V',emoji:'🎻',word:'Violin'},
+  {letter:'W',emoji:'🍉',word:'Watermelon'},
+  {letter:'X',emoji:'🎄',word:'Xmas'},
+  {letter:'Y',emoji:'🪀',word:'Yo-yo'},
+  {letter:'Z',emoji:'🦓',word:'Zebra'},
+];
+const NUMBERS = [
+  {num:1, word:'One',       emoji:'🍎'},{num:2, word:'Two',       emoji:'🌟'},
+  {num:3, word:'Three',     emoji:'🌸'},{num:4, word:'Four',      emoji:'🍭'},
+  {num:5, word:'Five',      emoji:'🐣'},{num:6, word:'Six',       emoji:'🍓'},
+  {num:7, word:'Seven',     emoji:'🌈'},{num:8, word:'Eight',     emoji:'🦋'},
+  {num:9, word:'Nine',      emoji:'🍀'},{num:10,word:'Ten',       emoji:'🎈'},
+  {num:11,word:'Eleven',    emoji:'⭐'},{num:12,word:'Twelve',    emoji:'🍕'},
+  {num:13,word:'Thirteen',  emoji:'🐠'},{num:14,word:'Fourteen',  emoji:'🌻'},
+  {num:15,word:'Fifteen',   emoji:'🎵'},{num:16,word:'Sixteen',   emoji:'🍦'},
+  {num:17,word:'Seventeen', emoji:'🦄'},{num:18,word:'Eighteen',  emoji:'🌺'},
+  {num:19,word:'Nineteen',  emoji:'🍇'},{num:20,word:'Twenty',    emoji:'🎉'},
+];
+const WEEKDAYS = [
+  {name:'Monday',   emoji:'☀️', short:'Mon'},
+  {name:'Tuesday',  emoji:'🌤️',short:'Tue'},
+  {name:'Wednesday',emoji:'🌈', short:'Wed'},
+  {name:'Thursday', emoji:'⚡', short:'Thu'},
+  {name:'Friday',   emoji:'🎉', short:'Fri'},
+  {name:'Saturday', emoji:'🏖️',short:'Sat'},
+  {name:'Sunday',   emoji:'🌟', short:'Sun'},
+];
+const MONTHS = [
+  {name:'January',  emoji:'❄️', short:'Jan'},{name:'February', emoji:'💝', short:'Feb'},
+  {name:'March',    emoji:'🌸', short:'Mar'},{name:'April',    emoji:'🌦️',short:'Apr'},
+  {name:'May',      emoji:'🌻', short:'May'},{name:'June',     emoji:'☀️', short:'Jun'},
+  {name:'July',     emoji:'🏖️',short:'Jul'},{name:'August',   emoji:'🌊', short:'Aug'},
+  {name:'September',emoji:'🍂', short:'Sep'},{name:'October',  emoji:'🎃', short:'Oct'},
+  {name:'November', emoji:'🍁', short:'Nov'},{name:'December', emoji:'🎄', short:'Dec'},
+];
+
+const SECTIONS = {
+  letters:  { data: LETTERS,  total: 26 },
+  numbers:  { data: NUMBERS,  total: 20 },
+  weekdays: { data: WEEKDAYS, total: 7  },
+  months:   { data: MONTHS,   total: 12 },
+};
+
+const COLORS      = ['col-red','col-orange','col-yellow','col-green','col-blue','col-purple','col-pink','col-teal'];
+const BAND_COLORS = ['#FF6B6B','#FF9F43','#FFD93D','#6BCB77','#4D96FF','#C56BFF','#FF6EB4','#00CEC9'];
+const CONFETTI_COLORS = ['#FF6B6B','#FFD93D','#6BCB77','#4D96FF','#C56BFF','#FF9F43'];
+
+// ══════════════════════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════════════════════
+let currentSection = 'letters';
+let currentIndex   = 0;
+let currentData    = LETTERS;
+let spellEnabled   = true;
+let musicOn        = true;
+let isReadingAll   = false;
+let readAllStop    = false;
+
+// Per-section visited sets
+const visited = { letters: new Set(), numbers: new Set(), weekdays: new Set(), months: new Set() };
+
+// ══════════════════════════════════════════════════════
+//  AUDIO ENGINE (Web Audio API — no files needed)
+// ══════════════════════════════════════════════════════
+const AudioCtx = window.AudioContext || window.webkitAudioContext;
+let audioCtx = null;
+
+function getAudioCtx() {
+  if (!audioCtx) audioCtx = new AudioCtx();
+  if (audioCtx.state === 'suspended') audioCtx.resume();
+  return audioCtx;
+}
+
+// Play a single beep
+function beep(freq, duration, type='sine', volume=0.3, startTime=0) {
+  try {
+    const ctx  = getAudioCtx();
+    const osc  = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.type      = type;
+    osc.frequency.setValueAtTime(freq, ctx.currentTime + startTime);
+    gain.gain.setValueAtTime(volume, ctx.currentTime + startTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + startTime + duration);
+    osc.start(ctx.currentTime + startTime);
+    osc.stop(ctx.currentTime + startTime + duration + 0.05);
+  } catch(e) {}
+}
+
+// Pop sound — tile tap
+function playPop() {
+  if (!musicOn) return;
+  beep(600, 0.06, 'square', 0.15);
+  beep(900, 0.08, 'sine',   0.12, 0.05);
+}
+
+// Ding — between Read All items
+function playDing() {
+  if (!musicOn) return;
+  beep(880, 0.15, 'sine', 0.18);
+}
+
+// Chime — Well Done / modal open
+function playChime() {
+  if (!musicOn) return;
+  const notes = [523, 659, 784, 1047];
+  notes.forEach((f, i) => beep(f, 0.25, 'sine', 0.2, i * 0.13));
+}
+
+// Background music — simple looping nursery tune
+let bgMusicInterval = null;
+const BG_MELODY = [
+  // Twinkle twinkle style melody: C C G G A A G rest F F E E D D C
+  [523,0.18],[523,0.18],[784,0.18],[784,0.18],[880,0.18],[880,0.18],[784,0.35],
+  [0,0.15],
+  [698,0.18],[698,0.18],[659,0.18],[659,0.18],[587,0.18],[587,0.18],[523,0.35],
+  [0,0.2],
+  [784,0.18],[784,0.18],[698,0.18],[698,0.18],[659,0.18],[659,0.18],[587,0.35],
+  [0,0.15],
+  [784,0.18],[784,0.18],[698,0.18],[698,0.18],[659,0.18],[659,0.18],[587,0.35],
+  [0,0.25],
+];
+
+let bgPlaying = false;
+let bgLoopId  = null;
+
+function playBgMusic() {
+  if (!musicOn || bgPlaying) return;
+  bgPlaying = true;
+  let noteIdx = 0;
+  let t = 0;
+
+  function scheduleLoop() {
+    if (!musicOn) { bgPlaying = false; return; }
+    const ctx = getAudioCtx();
+    t = ctx.currentTime;
+    BG_MELODY.forEach(([freq, dur]) => {
+      if (freq > 0) beep(freq, dur * 0.85, 'sine', 0.07, t - ctx.currentTime);
+      t += dur + 0.02;
+    });
+    const totalDur = BG_MELODY.reduce((s, [, d]) => s + d + 0.02, 0) * 1000;
+    bgLoopId = setTimeout(scheduleLoop, totalDur - 200);
+  }
+  scheduleLoop();
+}
+
+function stopBgMusic() {
+  bgPlaying = false;
+  clearTimeout(bgLoopId);
+}
+
+// Start music after first user interaction (browser policy)
+let musicStarted = false;
+function tryStartMusic() {
+  if (musicOn && !musicStarted) {
+    musicStarted = true;
+    playBgMusic();
+  }
+}
+document.addEventListener('click', tryStartMusic, { once: true });
+
+// Music toggle button
+const btnMusic = document.getElementById('btnMusic');
+btnMusic.addEventListener('click', () => {
+  musicOn = !musicOn;
+  btnMusic.textContent = musicOn ? '🎵 Music: ON' : '🔇 Music: OFF';
+  btnMusic.classList.toggle('on',  musicOn);
+  btnMusic.classList.toggle('off', !musicOn);
+  if (musicOn)  { musicStarted = false; tryStartMusic(); }
+  else          { stopBgMusic(); }
+});
+
+// ══════════════════════════════════════════════════════
+//  SPELL TOGGLE
+// ══════════════════════════════════════════════════════
+const spellToggle = document.getElementById('spellToggle');
+const spellLabel  = document.getElementById('spellLabel');
+spellToggle.addEventListener('change', () => {
+  spellEnabled = spellToggle.checked;
+  spellLabel.textContent = spellEnabled ? 'ON' : 'OFF';
+});
+
+// ══════════════════════════════════════════════════════
+//  VOICE
+// ══════════════════════════════════════════════════════
+let preferredVoice = null;
+function loadVoices() {
+  const voices = window.speechSynthesis.getVoices();
+  preferredVoice =
+    voices.find(v => v.lang === 'en-IN') ||
+    voices.find(v => v.lang.startsWith('en-IN')) ||
+    voices.find(v => v.lang.startsWith('en') && v.name.toLowerCase().includes('female')) ||
+    voices.find(v => v.lang.startsWith('en')) || null;
+}
+if (window.speechSynthesis) {
+  loadVoices();
+  window.speechSynthesis.onvoiceschanged = loadVoices;
+}
+
+function mkU(text, rate=0.72, pitch=1.35) {
+  const u = new SpeechSynthesisUtterance(text);
+  u.rate = rate; u.pitch = pitch;
+  if (preferredVoice) u.voice = preferredVoice;
+  return u;
+}
+
+// ══════════════════════════════════════════════════════
+//  BUILD GRIDS
+// ══════════════════════════════════════════════════════
+function buildGrid(containerId, section, items, mainFn, emojiFn, subFn, fontSize) {
+  const g = document.getElementById(containerId);
+  items.forEach((item, i) => {
+    const tile = document.createElement('div');
+    tile.className = `tile ${COLORS[i % COLORS.length]}`;
+    tile.id = `tile-${section}-${i}`;
+    tile.innerHTML = `
+      <div class="t-main" style="font-size:${fontSize}">${mainFn(item)}</div>
+      <div class="t-emoji">${emojiFn(item)}</div>
+      <div class="t-sub">${subFn(item)}</div>
+    `;
+    tile.addEventListener('click', () => {
+      playPop();
+      markVisited(section, i);
+      openModal(section, i);
+    });
+    g.appendChild(tile);
+  });
+}
+
+buildGrid('grid-letters',  'letters',  LETTERS,  d=>d.letter, d=>d.emoji, d=>d.word,  '2.1rem');
+buildGrid('grid-numbers',  'numbers',  NUMBERS,  d=>d.num,    d=>d.emoji, d=>d.word,  '2.1rem');
+buildGrid('grid-weekdays', 'weekdays', WEEKDAYS, d=>d.short,  d=>d.emoji, d=>d.name,  '1.35rem');
+buildGrid('grid-months',   'months',   MONTHS,   d=>d.short,  d=>d.emoji, d=>d.name,  '1.35rem');
+
+// ══════════════════════════════════════════════════════
+//  PROGRESS TRACKER
+// ══════════════════════════════════════════════════════
+function markVisited(section, index) {
+  visited[section].add(index);
+  updateProgress(section);
+}
+
+function updateProgress(section) {
+  const total   = SECTIONS[section].total;
+  const done    = visited[section].size;
+  const pct     = Math.round((done / total) * 100);
+  document.getElementById(`prog-${section}`).style.width      = pct + '%';
+  document.getElementById(`progLabel-${section}`).textContent = `${done}/${total}`;
+
+  // Stars: 1 star per 25% (or per fraction for smaller sets)
+  const starCount = Math.floor((done / total) * 5);
+  const starsEl   = document.getElementById(`stars-${section}`);
+  starsEl.textContent = starCount > 0 ? '⭐'.repeat(starCount) + ` ${done} visited!` : '';
+
+  // Tick visited tiles
+  document.querySelectorAll(`[id^="tile-${section}-"]`).forEach((el, i) => {
+    el.classList.toggle('visited', visited[section].has(i));
+  });
+}
+
+// ══════════════════════════════════════════════════════
+//  TABS
+// ══════════════════════════════════════════════════════
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    if (isReadingAll) stopReadAll();
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.section-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('panel-' + btn.dataset.tab).classList.add('active');
+    currentSection = btn.dataset.tab;
+    currentData    = SECTIONS[currentSection].data;
+  });
+});
+
+// ══════════════════════════════════════════════════════
+//  READ ALL
+// ══════════════════════════════════════════════════════
+['letters','numbers','weekdays','months'].forEach(sec => {
+  document.getElementById(`readAll-${sec}`).addEventListener('click', () => {
+    if (isReadingAll && currentSection === sec) { stopReadAll(); return; }
+    if (isReadingAll) stopReadAll();
+    startReadAll(sec);
+  });
+});
+
+function startReadAll(section) {
+  isReadingAll   = true;
+  readAllStop    = false;
+  currentSection = section;
+  currentData    = SECTIONS[section].data;
+
+  const btn = document.getElementById(`readAll-${section}`);
+  btn.textContent = '⏹ Stop';
+  btn.classList.add('stop');
+
+  readAllSequence(section, 0);
+}
+
+function stopReadAll() {
+  readAllStop  = true;
+  isReadingAll = false;
+  window.speechSynthesis && window.speechSynthesis.cancel();
+  clearAllHighlights();
+  ['letters','numbers','weekdays','months'].forEach(sec => {
+    const btn = document.getElementById(`readAll-${sec}`);
+    btn.classList.remove('stop');
+    btn.textContent = '▶ Read All';
+  });
+}
+
+function clearAllHighlights() {
+  document.querySelectorAll('.tile.reading').forEach(t => t.classList.remove('reading'));
+}
+
+function readAllSequence(section, index) {
+  if (readAllStop) { stopReadAll(); return; }
+
+  const data = SECTIONS[section].data;
+  if (index >= data.length) {
+    // Finished!
+    stopReadAll();
+    markAllVisited(section);
+    setTimeout(() => showWellDone(section), 400);
+    return;
+  }
+
+  const item    = data[index];
+  const tileEl  = document.getElementById(`tile-${section}-${index}`);
+
+  clearAllHighlights();
+  if (tileEl) {
+    tileEl.classList.add('reading');
+    tileEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  markVisited(section, index);
+  playDing();
+
+  const uList = buildReadAllUtterances(section, item);
+
+  // After last utterance, move to next
+  const last = uList[uList.length - 1];
+  last.onend = () => {
+    if (readAllStop) return;
+    setTimeout(() => readAllSequence(section, index + 1), 350);
+  };
+  last.onerror = () => {
+    if (!readAllStop) readAllSequence(section, index + 1);
+  };
+
+  window.speechSynthesis.cancel();
+  uList.forEach(u => window.speechSynthesis.speak(u));
+}
+
+function buildReadAllUtterances(section, item) {
+  const uList = [];
+
+  if (section === 'letters') {
+    // "A for Apple"
+    uList.push(mkU(`${item.letter} for ${item.word}`, 0.72, 1.35));
+    if (spellEnabled) {
+      item.word.replace(/\s/g,'').split('').forEach(ch => uList.push(mkU(ch, 0.62, 1.35)));
+      uList.push(mkU(item.word, 0.78, 1.4));
+    }
+
+  } else if (section === 'numbers') {
+    uList.push(mkU(`${item.num}. ${item.word}`, 0.75, 1.35));
+    if (spellEnabled) {
+      item.word.split('').forEach(ch => uList.push(mkU(ch, 0.62, 1.35)));
+      uList.push(mkU(item.word, 0.78, 1.4));
+    }
+
+  } else if (section === 'weekdays') {
+    uList.push(mkU(item.name, 0.75, 1.35));
+    if (spellEnabled) {
+      item.name.split('').forEach(ch => uList.push(mkU(ch, 0.62, 1.35)));
+      uList.push(mkU(item.name, 0.78, 1.4));
+    }
+
+  } else { // months
+    uList.push(mkU(item.name, 0.75, 1.35));
+    if (spellEnabled) {
+      item.name.split('').forEach(ch => uList.push(mkU(ch, 0.62, 1.35)));
+      uList.push(mkU(item.name, 0.78, 1.4));
+    }
+  }
+  return uList;
+}
+
+function markAllVisited(section) {
+  const total = SECTIONS[section].total;
+  for (let i = 0; i < total; i++) visited[section].add(i);
+  updateProgress(section);
+}
+
+// ══════════════════════════════════════════════════════
+//  WELL DONE
+// ══════════════════════════════════════════════════════
+const wellDoneOverlay = document.getElementById('wellDoneOverlay');
+const wellDoneSub     = document.getElementById('wellDoneSub');
+const labels = { letters:'Letters', numbers:'Numbers', weekdays:'Weekdays', months:'Months' };
+
+function showWellDone(section) {
+  wellDoneSub.textContent = `You finished all the ${labels[section]}! 🎉`;
+  wellDoneOverlay.classList.add('active');
+  spawnConfetti(60);
+  playChime();
+}
+
+document.getElementById('btnWellDoneClose').addEventListener('click', () => {
+  wellDoneOverlay.classList.remove('active');
+});
+
+// ══════════════════════════════════════════════════════
+//  MODAL
+// ══════════════════════════════════════════════════════
+const overlay      = document.getElementById('modalOverlay');
+const modalBand    = document.getElementById('modalBand');
+const modalMain    = document.getElementById('modalMain');
+const modalWordLbl = document.getElementById('modalWordLabel');
+const modalEmoji   = document.getElementById('modalEmoji');
+const countGrid    = document.getElementById('countGrid');
+const btnClose     = document.getElementById('btnClose');
+const btnSpeak     = document.getElementById('btnSpeak');
+const btnPrev      = document.getElementById('btnPrev');
+const btnNext      = document.getElementById('btnNext');
+const navCounter   = document.getElementById('navCounter');
+const speakDots    = document.getElementById('speakDots');
+
+function openModal(section, index) {
+  currentSection = section;
+  currentData    = SECTIONS[section].data;
+  currentIndex   = index;
+  updateModal();
+  overlay.classList.add('active');
+  spawnConfetti(28);
+  playChime();
+  speakCurrent();
+}
+
+function updateModal() {
+  const item = currentData[currentIndex];
+  modalBand.style.background = BAND_COLORS[currentIndex % BAND_COLORS.length];
+  navCounter.textContent = `${currentIndex + 1} / ${currentData.length}`;
+
+  modalEmoji.style.display = 'block';
+  countGrid.innerHTML = '';
+  countGrid.style.display = 'none';
+
+  if (currentSection === 'letters') {
+    modalMain.textContent    = item.letter;
+    modalWordLbl.textContent = item.word;
+    modalEmoji.textContent   = item.emoji;
+
+  } else if (currentSection === 'numbers') {
+    modalMain.textContent    = item.num;
+    modalWordLbl.textContent = item.word;
+    modalEmoji.style.display = 'none';
+    countGrid.style.display  = 'flex';
+    const size = item.num <= 5 ? '2.4rem' : item.num <= 10 ? '2rem' : item.num <= 15 ? '1.6rem' : '1.3rem';
+    for (let i = 0; i < item.num; i++) {
+      const span = document.createElement('span');
+      span.textContent = item.emoji;
+      span.style.cssText = `font-size:${size};line-height:1.1`;
+      countGrid.appendChild(span);
+    }
+
+  } else if (currentSection === 'weekdays') {
+    modalMain.textContent    = item.short;
+    modalWordLbl.textContent = item.name;
+    modalEmoji.textContent   = item.emoji;
+
+  } else {
+    modalMain.textContent    = item.short;
+    modalWordLbl.textContent = item.name;
+    modalEmoji.textContent   = item.emoji;
+  }
+
+  modalEmoji.style.animation = 'none';
+  void modalEmoji.offsetWidth;
+  modalEmoji.style.animation = 'popIn 0.45s cubic-bezier(0.34,1.56,0.64,1)';
+}
+
+function closeModal() {
+  overlay.classList.remove('active');
+  window.speechSynthesis && window.speechSynthesis.cancel();
+  setSpeaking(false);
+}
+
+btnClose.addEventListener('click', closeModal);
+overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
+
+btnPrev.addEventListener('click', () => {
+  currentIndex = (currentIndex - 1 + currentData.length) % currentData.length;
+  markVisited(currentSection, currentIndex);
+  updateModal(); speakCurrent();
+});
+btnNext.addEventListener('click', () => {
+  currentIndex = (currentIndex + 1) % currentData.length;
+  markVisited(currentSection, currentIndex);
+  updateModal(); speakCurrent();
+});
+btnSpeak.addEventListener('click', speakCurrent);
+
+document.addEventListener('keydown', e => {
+  if (!overlay.classList.contains('active')) return;
+  if (e.key === 'ArrowRight') btnNext.click();
+  if (e.key === 'ArrowLeft')  btnPrev.click();
+  if (e.key === 'Escape')     closeModal();
+  if (e.key === ' ')          { e.preventDefault(); speakCurrent(); }
+});
+
+// ══════════════════════════════════════════════════════
+//  SPEECH (modal)
+// ══════════════════════════════════════════════════════
+function setSpeaking(val) {
+  btnSpeak.classList.toggle('speaking', val);
+  speakDots.classList.toggle('visible', val);
+  btnSpeak.textContent = val ? '🔊 Speaking...' : '🔊 Say It!';
+}
+
+function speakCurrent() {
+  if (!window.speechSynthesis) return;
+  window.speechSynthesis.cancel();
+  setSpeaking(true);
+  const item  = currentData[currentIndex];
+  const uList = buildReadAllUtterances(currentSection, item);
+  uList[uList.length - 1].onend = () => setSpeaking(false);
+  uList.forEach(u => window.speechSynthesis.speak(u));
+}
+
+// ══════════════════════════════════════════════════════
+//  CONFETTI
+// ══════════════════════════════════════════════════════
+function spawnConfetti(count = 30) {
+  const container = document.getElementById('confettiContainer');
+  container.innerHTML = '';
+  for (let i = 0; i < count; i++) {
+    const p = document.createElement('div');
+    p.className = 'confetti-piece';
+    p.style.cssText = `
+      left: ${Math.random()*100}%;
+      top: -10px;
+      background: ${CONFETTI_COLORS[Math.floor(Math.random()*CONFETTI_COLORS.length)]};
+      width:  ${6+Math.random()*8}px;
+      height: ${6+Math.random()*8}px;
+      border-radius: ${Math.random()>0.5?'50%':'3px'};
+      animation-delay:    ${Math.random()*0.6}s;
+      animation-duration: ${1.2+Math.random()*0.8}s;
+    `;
+    container.appendChild(p);
+  }
+  setTimeout(() => container.innerHTML = '', 3000);
+}
+</script>
+</body>
+</html>
