@@ -3,6 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#FF6B6B">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Learn & Play">
+<link rel="manifest" href="manifest.json">
 <title>Learn & Play! 🌈</title>
 <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
 <style>
@@ -378,11 +383,13 @@
 
   .btn-quiz-close {
     position: absolute; top: 13px; right: 13px;
-    width: 34px; height: 34px; border-radius: 50%;
-    border: none; background: #f0f0f0; font-size: 1rem;
+    width: 44px; height: 44px; border-radius: 50%;
+    border: none; background: #f0f0f0; font-size: 1.1rem;
     cursor: pointer; color: #555; font-weight: 900;
     display: flex; align-items: center; justify-content: center;
     transition: background 0.15s, transform 0.15s;
+    -webkit-clip-path: circle(50% at 50% 50%);
+    clip-path: circle(50% at 50% 50%);
   }
   .btn-quiz-close:hover { background: #FFD93D; transform: rotate(90deg); }
 
@@ -537,12 +544,15 @@
 
   .btn-close {
     position: absolute; top: 13px; right: 13px;
-    width: 36px; height: 36px;
+    width: 44px; height: 44px;
     border-radius: 50%; border: none;
-    background: #F0F0F0; font-size: 1.1rem; cursor: pointer;
+    background: #F0F0F0; font-size: 1.2rem; cursor: pointer;
     display: flex; align-items: center; justify-content: center;
     transition: background 0.15s, transform 0.15s;
     color: #555; font-weight: 900;
+    overflow: hidden;
+    -webkit-clip-path: circle(50% at 50% 50%);
+    clip-path: circle(50% at 50% 50%);
   }
   .btn-close:hover { background: #FFD93D; transform: scale(1.1) rotate(90deg); }
 
@@ -660,7 +670,133 @@
   }
   .btn-wellDone-close:hover { transform: translateY(-2px); }
 
-  /* ── Confetti ── */
+  /* ── Splash Screen ── */
+  .splash {
+    position: fixed; inset: 0;
+    background: linear-gradient(135deg, #FF6B6B, #FFD93D, #6BCB77, #4D96FF);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    z-index: 9999;
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .splash.hide { opacity: 0; transform: scale(1.05); pointer-events: none; }
+  .splash-emoji { font-size: 5rem; animation: splashBounce 0.8s cubic-bezier(0.34,1.56,0.64,1); }
+  .splash-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: 2.8rem; color: #fff;
+    text-shadow: 3px 4px 0 rgba(0,0,0,0.15);
+    margin-top: 16px;
+    animation: splashFadeUp 0.6s ease 0.2s both;
+  }
+  .splash-sub {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1rem; color: rgba(255,255,255,0.85);
+    margin-top: 8px; letter-spacing: 2px;
+    animation: splashFadeUp 0.6s ease 0.4s both;
+  }
+  @keyframes splashBounce {
+    0%   { transform: scale(0) rotate(-20deg); opacity: 0; }
+    100% { transform: scale(1) rotate(0deg);   opacity: 1; }
+  }
+  @keyframes splashFadeUp {
+    0%   { transform: translateY(20px); opacity: 0; }
+    100% { transform: translateY(0);    opacity: 1; }
+  }
+
+  /* ── Per-section background shift ── */
+  body { transition: background-color 0.5s ease; }
+  body.bg-letters  { background-color: #FFF0EE; }
+  body.bg-numbers  { background-color: #EEF4FF; }
+  body.bg-weekdays { background-color: #EEFFF4; }
+  body.bg-months   { background-color: #F8EEFF; }
+  body.bg-words    { background-color: #FFF6EE; }
+
+  /* ── Tile squish animation ── */
+  .tile { transition: transform 0.12s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.12s ease; }
+  .tile:active { transform: scale(0.92) !important; }
+
+  /* ── Tile slide-in animation ── */
+  @keyframes tileSlideIn {
+    0%   { opacity: 0; transform: translateY(18px) scale(0.95); }
+    100% { opacity: 1; transform: translateY(0)    scale(1); }
+  }
+  .tile-animate {
+    animation: tileSlideIn 0.35s cubic-bezier(0.34,1.56,0.64,1) both;
+  }
+
+  /* ── Animated star progress ── */
+  .progress-wrap { display: none; } /* hide old bar */
+  .star-progress {
+    max-width: 800px;
+    margin: 0 auto 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .star-progress-label {
+    font-family: 'Fredoka One', cursive;
+    font-size: 0.82rem;
+    color: #bbb;
+    min-width: 50px;
+  }
+  .star-track {
+    display: flex;
+    gap: 3px;
+    flex-wrap: wrap;
+    flex: 1;
+  }
+  .star-pip {
+    font-size: 1.1rem;
+    transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1), filter 0.3s;
+    filter: grayscale(1) opacity(0.25);
+    transform: scale(0.8);
+    line-height: 1;
+  }
+  .star-pip.filled {
+    filter: grayscale(0) opacity(1);
+    transform: scale(1.1);
+    animation: starPop 0.35s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  @keyframes starPop {
+    0%   { transform: scale(0.5); }
+    60%  { transform: scale(1.3); }
+    100% { transform: scale(1.1); }
+  }
+
+  /* ── Bigger tap targets ── */
+  .btn-nav    { width: 56px; height: 56px; }
+  .btn-close  { width: 44px; height: 44px; font-size: 1.2rem; }
+  .tab-btn    { padding: 11px 18px; min-height: 44px; }
+  .btn-speak  { padding: 13px 28px; min-height: 48px; }
+  .btn-read-all { padding: 11px 20px; min-height: 44px; }
+  .tile       { min-height: 88px; }
+  .quiz-choice { min-height: 56px; }
+  .word-card  { min-height: 80px; }
+
+  /* ── Celebration variants ── */
+  @keyframes balloonRise {
+    0%   { transform: translateY(110vh) rotate(0deg);   opacity: 1; }
+    100% { transform: translateY(-20px) rotate(20deg);  opacity: 0; }
+  }
+  @keyframes fireworkBurst {
+    0%   { transform: scale(0) rotate(0deg);   opacity: 1; }
+    60%  { transform: scale(1.5) rotate(180deg); opacity: 1; }
+    100% { transform: scale(2) rotate(360deg); opacity: 0; }
+  }
+  .balloon-piece {
+    position: absolute;
+    font-size: 2rem;
+    animation: balloonRise 2s ease forwards;
+    pointer-events: none;
+  }
+  .firework-piece {
+    position: absolute;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    animation: fireworkBurst 0.8s ease forwards;
+    pointer-events: none;
+  }
   .confetti-container { position:fixed; inset:0; pointer-events:none; z-index:999; overflow:hidden; }
   .confetti-piece {
     position:absolute; border-radius:2px;
@@ -673,6 +809,13 @@
 </style>
 </head>
 <body>
+
+<!-- Splash Screen -->
+<div class="splash" id="splash">
+  <span class="splash-emoji">🌈</span>
+  <div class="splash-title">Learn & Play!</div>
+  <div class="splash-sub">TAP ANYTHING TO START</div>
+</div>
 
 <header>
   <h1>🌈 Learn &amp; Play!</h1>
@@ -710,6 +853,10 @@
     <button class="btn-read-all letters-color" id="readAll-letters">▶ Read All</button>
   </div>
   <div class="progress-wrap"><div class="progress-bar" id="prog-letters" style="width:0%"></div><span class="progress-label" id="progLabel-letters">0/26</span></div>
+  <div class="star-progress" id="starProg-letters">
+    <span class="star-progress-label">0/26</span>
+    <div class="star-track" id="starTrack-letters"></div>
+  </div>
   <div class="progress-stars" id="stars-letters"></div>
   <div class="grid grid-letters" id="grid-letters"></div>
 </div>
@@ -721,6 +868,10 @@
     <button class="btn-read-all numbers-color" id="readAll-numbers">▶ Read All</button>
   </div>
   <div class="progress-wrap"><div class="progress-bar" id="prog-numbers" style="width:0%"></div><span class="progress-label" id="progLabel-numbers">0/20</span></div>
+  <div class="star-progress" id="starProg-numbers">
+    <span class="star-progress-label">0/20</span>
+    <div class="star-track" id="starTrack-numbers"></div>
+  </div>
   <div class="progress-stars" id="stars-numbers"></div>
   <div class="grid grid-numbers" id="grid-numbers"></div>
 </div>
@@ -732,6 +883,10 @@
     <button class="btn-read-all weekdays-color" id="readAll-weekdays">▶ Read All</button>
   </div>
   <div class="progress-wrap"><div class="progress-bar" id="prog-weekdays" style="width:0%"></div><span class="progress-label" id="progLabel-weekdays">0/7</span></div>
+  <div class="star-progress" id="starProg-weekdays">
+    <span class="star-progress-label">0/7</span>
+    <div class="star-track" id="starTrack-weekdays"></div>
+  </div>
   <div class="progress-stars" id="stars-weekdays"></div>
   <div class="grid grid-weekdays" id="grid-weekdays"></div>
 </div>
@@ -743,6 +898,10 @@
     <button class="btn-read-all months-color" id="readAll-months">▶ Read All</button>
   </div>
   <div class="progress-wrap"><div class="progress-bar" id="prog-months" style="width:0%"></div><span class="progress-label" id="progLabel-months">0/12</span></div>
+  <div class="star-progress" id="starProg-months">
+    <span class="star-progress-label">0/12</span>
+    <div class="star-track" id="starTrack-months"></div>
+  </div>
   <div class="progress-stars" id="stars-months"></div>
   <div class="grid grid-months" id="grid-months"></div>
 </div>
@@ -753,6 +912,10 @@
     <div class="section-title">✏️ Word Families</div>
   </div>
   <div class="progress-wrap"><div class="progress-bar" id="prog-words" style="width:0%"></div><span class="progress-label" id="progLabel-words">0/10</span></div>
+  <div class="star-progress" id="starProg-words">
+    <span class="star-progress-label">0/10</span>
+    <div class="star-track" id="starTrack-words"></div>
+  </div>
   <div class="progress-stars" id="stars-words"></div>
   <div class="grid grid-words" id="grid-words"></div>
 </div>
@@ -936,7 +1099,146 @@ let readAllStop    = false;
 const visited = { letters: new Set(), numbers: new Set(), weekdays: new Set(), months: new Set(), words: new Set() };
 
 // ══════════════════════════════════════════════════════
-//  AUDIO ENGINE (Web Audio API — no files needed)
+//  SPLASH SCREEN
+// ══════════════════════════════════════════════════════
+const splash = document.getElementById('splash');
+setTimeout(() => splash.classList.add('hide'), 1800);
+setTimeout(() => splash.remove(), 2400);
+
+// ══════════════════════════════════════════════════════
+//  PER-SECTION BACKGROUND SHIFT
+// ══════════════════════════════════════════════════════
+const BG_CLASSES = ['bg-letters','bg-numbers','bg-weekdays','bg-months','bg-words'];
+function setBodyBg(section) {
+  BG_CLASSES.forEach(c => document.body.classList.remove(c));
+  document.body.classList.add(`bg-${section}`);
+}
+setBodyBg('letters');
+
+// ══════════════════════════════════════════════════════
+//  STAR PROGRESS
+// ══════════════════════════════════════════════════════
+const STAR_TOTALS = { letters:26, numbers:20, weekdays:7, months:12, words:10 };
+const MAX_STARS   = 10; // max pips shown regardless of total
+
+function initStarTrack(section) {
+  const track = document.getElementById(`starTrack-${section}`);
+  if (!track) return;
+  track.innerHTML = '';
+  const total = STAR_TOTALS[section];
+  const pips  = Math.min(total, MAX_STARS);
+  for (let i = 0; i < pips; i++) {
+    const pip = document.createElement('span');
+    pip.className = 'star-pip';
+    pip.textContent = '⭐';
+    pip.id = `pip-${section}-${i}`;
+    track.appendChild(pip);
+  }
+}
+
+function updateStarProgress(section, done) {
+  const total = STAR_TOTALS[section];
+  const pips  = Math.min(total, MAX_STARS);
+  const filled = Math.round((done / total) * pips);
+  const label  = document.querySelector(`#starProg-${section} .star-progress-label`);
+  if (label) label.textContent = `${done}/${total}`;
+  for (let i = 0; i < pips; i++) {
+    const pip = document.getElementById(`pip-${section}-${i}`);
+    if (!pip) continue;
+    const shouldFill = i < filled;
+    if (shouldFill && !pip.classList.contains('filled')) {
+      pip.classList.add('filled');
+    } else if (!shouldFill) {
+      pip.classList.remove('filled');
+    }
+  }
+}
+
+// Init all star tracks
+Object.keys(STAR_TOTALS).forEach(initStarTrack);
+
+// ══════════════════════════════════════════════════════
+//  TILE SLIDE-IN ANIMATION
+// ══════════════════════════════════════════════════════
+function animateTilesIn(section) {
+  const grid = document.getElementById(`grid-${section}`);
+  if (!grid) return;
+  const tiles = grid.querySelectorAll('.tile');
+  tiles.forEach((tile, i) => {
+    tile.classList.remove('tile-animate');
+    void tile.offsetWidth; // reflow
+    tile.style.animationDelay = `${i * 0.03}s`;
+    tile.classList.add('tile-animate');
+  });
+}
+animateTilesIn('letters'); // animate on load
+
+// ══════════════════════════════════════════════════════
+//  CELEBRATION VARIETY
+// ══════════════════════════════════════════════════════
+let celebrationIndex = 0;
+const BALLOON_EMOJIS = ['🎈','🎀','🌟','💛','❤️','💚','💙','💜'];
+
+function celebrate(intensity = 'normal') {
+  const type = celebrationIndex % 3;
+  celebrationIndex++;
+  if (type === 0) spawnConfetti(intensity === 'high' ? 80 : 30);
+  else if (type === 1) spawnBalloons(intensity === 'high' ? 20 : 10);
+  else spawnFireworks(intensity === 'high' ? 8 : 4);
+}
+
+function spawnBalloons(count = 10) {
+  const container = document.getElementById('confettiContainer');
+  container.innerHTML = '';
+  for (let i = 0; i < count; i++) {
+    const b = document.createElement('div');
+    b.className = 'balloon-piece';
+    b.textContent = BALLOON_EMOJIS[Math.floor(Math.random() * BALLOON_EMOJIS.length)];
+    b.style.cssText = `
+      left: ${Math.random()*100}%;
+      bottom: -60px;
+      animation-delay: ${Math.random()*0.8}s;
+      animation-duration: ${1.5 + Math.random()*1}s;
+      font-size: ${1.5 + Math.random()*1.5}rem;
+    `;
+    container.appendChild(b);
+  }
+  setTimeout(() => container.innerHTML = '', 3500);
+}
+
+function spawnFireworks(count = 4) {
+  const container = document.getElementById('confettiContainer');
+  container.innerHTML = '';
+  for (let i = 0; i < count; i++) {
+    const cx = 15 + Math.random() * 70;
+    const cy = 15 + Math.random() * 60;
+    for (let j = 0; j < 12; j++) {
+      const p = document.createElement('div');
+      p.className = 'firework-piece';
+      const angle = (j / 12) * 360;
+      const dist  = 40 + Math.random() * 60;
+      const tx    = Math.cos(angle * Math.PI/180) * dist;
+      const ty    = Math.sin(angle * Math.PI/180) * dist;
+      p.style.cssText = `
+        left: ${cx}%; top: ${cy}%;
+        background: hsl(${Math.random()*360},90%,60%);
+        animation-delay: ${i * 0.25}s;
+        animation-duration: 0.7s;
+        transform-origin: center;
+        --tx: ${tx}px; --ty: ${ty}px;
+      `;
+      // Use simpler translate animation
+      p.style.animation = `none`;
+      p.style.transition = `transform 0.6s ease, opacity 0.6s ease`;
+      container.appendChild(p);
+      setTimeout(() => {
+        p.style.transform = `translate(${tx}px, ${ty}px) scale(0)`;
+        p.style.opacity = '0';
+      }, i * 250 + 50);
+    }
+  }
+  setTimeout(() => container.innerHTML = '', 2500);
+}
 // ══════════════════════════════════════════════════════
 const AudioCtx = window.AudioContext || window.webkitAudioContext;
 let audioCtx = null;
@@ -1074,24 +1376,10 @@ spellToggle.addEventListener('change', () => {
 // ══════════════════════════════════════════════════════
 //  VOICE
 // ══════════════════════════════════════════════════════
-let preferredVoice = null;
-function loadVoices() {
-  const voices = window.speechSynthesis.getVoices();
-  preferredVoice =
-    voices.find(v => v.lang === 'en-IN') ||
-    voices.find(v => v.lang.startsWith('en-IN')) ||
-    voices.find(v => v.lang.startsWith('en') && v.name.toLowerCase().includes('female')) ||
-    voices.find(v => v.lang.startsWith('en')) || null;
-}
-if (window.speechSynthesis) {
-  loadVoices();
-  window.speechSynthesis.onvoiceschanged = loadVoices;
-}
-
+// Use device default voice — best natural voice per platform
 function mkU(text, rate=0.72, pitch=1.35) {
   const u = new SpeechSynthesisUtterance(text);
   u.rate = rate; u.pitch = pitch;
-  if (preferredVoice) u.voice = preferredVoice;
   return u;
 }
 
@@ -1156,16 +1444,16 @@ function markVisited(section, index) {
 function updateProgress(section) {
   const total   = SECTIONS[section].total;
   const done    = visited[section].size;
-  const pct     = Math.round((done / total) * 100);
-  document.getElementById(`prog-${section}`).style.width      = pct + '%';
-  document.getElementById(`progLabel-${section}`).textContent = `${done}/${total}`;
+  updateStarProgress(section, done);
 
-  // Stars: 1 star per 25% (or per fraction for smaller sets)
+  // Old progress bar (hidden via CSS but kept for compatibility)
+  const pb = document.getElementById(`prog-${section}`);
+  if (pb) pb.style.width = Math.round((done/total)*100) + '%';
+
   const starCount = Math.floor((done / total) * 5);
   const starsEl   = document.getElementById(`stars-${section}`);
-  starsEl.textContent = starCount > 0 ? '⭐'.repeat(starCount) + ` ${done} visited!` : '';
+  if (starsEl) starsEl.textContent = starCount > 0 ? '⭐'.repeat(starCount) + ` ${done} visited!` : '';
 
-  // Tick visited tiles
   document.querySelectorAll(`[id^="tile-${section}-"]`).forEach((el, i) => {
     el.classList.toggle('visited', visited[section].has(i));
   });
@@ -1182,10 +1470,9 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
     btn.classList.add('active');
     document.getElementById('panel-' + btn.dataset.tab).classList.add('active');
     currentSection = btn.dataset.tab;
-    // Words tab has its own data structure, not in SECTIONS
-    if (SECTIONS[currentSection]) {
-      currentData = SECTIONS[currentSection].data;
-    }
+    if (SECTIONS[currentSection]) currentData = SECTIONS[currentSection].data;
+    setBodyBg(currentSection);
+    animateTilesIn(currentSection);
   });
 });
 
@@ -1273,33 +1560,20 @@ function buildReadAllUtterances(section, item) {
   const uList = [];
 
   if (section === 'letters') {
-    // "A for Apple"
-    uList.push(mkU(`${item.letter} for ${item.word}`, 0.72, 1.35));
-    if (spellEnabled) {
-      item.word.replace(/\s/g,'').split('').forEach(ch => uList.push(mkU(ch, 0.62, 1.35)));
-      uList.push(mkU(item.word, 0.78, 1.4));
-    }
+    // Just say the letter: "A"
+    uList.push(mkU(item.letter, 0.75, 1.35));
 
   } else if (section === 'numbers') {
-    uList.push(mkU(`${item.num}. ${item.word}`, 0.75, 1.35));
-    if (spellEnabled) {
-      item.word.split('').forEach(ch => uList.push(mkU(ch, 0.62, 1.35)));
-      uList.push(mkU(item.word, 0.78, 1.4));
-    }
+    // Just say the number: "1"
+    uList.push(mkU(String(item.num), 0.75, 1.35));
 
   } else if (section === 'weekdays') {
+    // Just say the day: "Monday"
     uList.push(mkU(item.name, 0.75, 1.35));
-    if (spellEnabled) {
-      item.name.split('').forEach(ch => uList.push(mkU(ch, 0.62, 1.35)));
-      uList.push(mkU(item.name, 0.78, 1.4));
-    }
 
-  } else { // months
+  } else {
+    // Just say the month: "January"
     uList.push(mkU(item.name, 0.75, 1.35));
-    if (spellEnabled) {
-      item.name.split('').forEach(ch => uList.push(mkU(ch, 0.62, 1.35)));
-      uList.push(mkU(item.name, 0.78, 1.4));
-    }
   }
   return uList;
 }
@@ -1320,7 +1594,7 @@ const labels = { letters:'Letters', numbers:'Numbers', weekdays:'Weekdays', mont
 function showWellDone(section) {
   wellDoneSub.textContent = `You finished all the ${labels[section]}! 🎉`;
   wellDoneOverlay.classList.add('active');
-  spawnConfetti(60);
+  celebrate('high');
   playChime();
 }
 
@@ -1345,12 +1619,13 @@ const navCounter   = document.getElementById('navCounter');
 const speakDots    = document.getElementById('speakDots');
 
 function openModal(section, index) {
+  if (isReadingAll) stopReadAll();
   currentSection = section;
   currentData    = SECTIONS[section].data;
   currentIndex   = index;
   updateModal();
   overlay.classList.add('active');
-  spawnConfetti(28);
+  celebrate('normal');
   playChime();
   speakCurrent();
 }
@@ -1436,12 +1711,43 @@ function setSpeaking(val) {
   btnSpeak.textContent = val ? '🔊 Speaking...' : '🔊 Say It!';
 }
 
+function buildFullUtterances(section, item) {
+  const uList = [];
+  if (section === 'letters') {
+    uList.push(mkU(`${item.letter} for ${item.word}`, 0.72, 1.35));
+    if (spellEnabled) {
+      item.word.replace(/\s/g,'').split('').forEach(ch => uList.push(mkU(ch, 0.62, 1.35)));
+      uList.push(mkU(item.word, 0.78, 1.4));
+    }
+  } else if (section === 'numbers') {
+    // "1" → "O N E" → "One"
+    uList.push(mkU(String(item.num), 0.75, 1.35));
+    if (spellEnabled) {
+      item.word.split('').forEach(ch => uList.push(mkU(ch, 0.62, 1.35)));
+    }
+    uList.push(mkU(item.word, 0.78, 1.4));
+  } else if (section === 'weekdays') {
+    uList.push(mkU(item.name, 0.75, 1.35));
+    if (spellEnabled) {
+      item.name.split('').forEach(ch => uList.push(mkU(ch, 0.62, 1.35)));
+      uList.push(mkU(item.name, 0.78, 1.4));
+    }
+  } else {
+    uList.push(mkU(item.name, 0.75, 1.35));
+    if (spellEnabled) {
+      item.name.split('').forEach(ch => uList.push(mkU(ch, 0.62, 1.35)));
+      uList.push(mkU(item.name, 0.78, 1.4));
+    }
+  }
+  return uList;
+}
+
 function speakCurrent() {
   if (!window.speechSynthesis) return;
   window.speechSynthesis.cancel();
   setSpeaking(true);
   const item  = currentData[currentIndex];
-  const uList = buildReadAllUtterances(currentSection, item);
+  const uList = buildFullUtterances(currentSection, item);
   uList[uList.length - 1].onend = () => setSpeaking(false);
   uList.forEach(u => window.speechSynthesis.speak(u));
 }
@@ -1462,6 +1768,7 @@ const quizChoices       = document.getElementById('quizChoices');
 const btnQuizSpeak      = document.getElementById('btnQuizSpeak');
 
 function openWordDetail(index) {
+  if (isReadingAll) stopReadAll();
   currentFamilyIndex = index;
   const fam = WORD_FAMILIES[index];
   wordFamilyTitle.textContent = `${fam.family} Words`;
@@ -1502,7 +1809,12 @@ function speakFamilyWords(fam) {
 function speakWord(word) {
   if (!window.speechSynthesis) return;
   window.speechSynthesis.cancel();
-  window.speechSynthesis.speak(mkU(word, 0.72, 1.35));
+  const uList = [];
+  if (spellEnabled) {
+    word.split('').forEach(ch => uList.push(mkU(ch, 0.62, 1.35)));
+  }
+  uList.push(mkU(word, 0.75, 1.35));
+  uList.forEach(u => window.speechSynthesis.speak(u));
 }
 
 document.getElementById('btnWordDetailClose').addEventListener('click', () => {
@@ -1660,12 +1972,10 @@ btnQuizSpeak.addEventListener('click', () => {
 function updateWordsProgress() {
   const total = 10;
   const done  = visited['words'].size;
-  const pct   = Math.round((done / total) * 100);
-  document.getElementById('prog-words').style.width      = pct + '%';
-  document.getElementById('progLabel-words').textContent = `${done}/${total}`;
+  updateStarProgress('words', done);
   const starCount = Math.floor((done / total) * 5);
   const starsEl   = document.getElementById('stars-words');
-  starsEl.textContent = starCount > 0 ? '⭐'.repeat(starCount) + ` ${done} visited!` : '';
+  if (starsEl) starsEl.textContent = starCount > 0 ? '⭐'.repeat(starCount) + ` ${done} visited!` : '';
   document.querySelectorAll('[id^="tile-words-"]').forEach((el, i) => {
     el.classList.toggle('visited', visited['words'].has(i));
   });
