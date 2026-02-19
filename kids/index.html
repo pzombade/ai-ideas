@@ -681,7 +681,7 @@
 
 <!-- Top Controls -->
 <div class="top-controls">
-  <button class="btn-music on" id="btnMusic">🎵 Music: ON</button>
+  <button class="btn-music off" id="btnMusic">🔇 Music: OFF</button>
 
   <div class="spell-toggle-wrap">
     <span>🔤 Spelling</span>
@@ -886,10 +886,10 @@ const SECTIONS = {
 // ── WORD FAMILIES ─────────────────────────────────────
 const WORD_FAMILIES = [
   { family:'-AN', color:'col-red',    words:[
-    {word:'can',emoji:'🥫'},{word:'man',emoji:'👨'},{word:'fan',emoji:'🌀'}
+    {word:'can',emoji:'🥫'},{word:'man',emoji:'👨'},{word:'fan',emoji:'🪭'}
   ]},
   { family:'-AT', color:'col-orange', words:[
-    {word:'mat',emoji:'🪣'},{word:'cat',emoji:'🐱'},{word:'hat',emoji:'🎩'}
+    {word:'mat',emoji:'🗺️'},{word:'cat',emoji:'🐱'},{word:'hat',emoji:'🎩'}
   ]},
   { family:'-EN', color:'col-yellow', words:[
     {word:'hen',emoji:'🐔'},{word:'pen',emoji:'🖊️'},{word:'ten',emoji:'🔟'}
@@ -928,7 +928,7 @@ let currentSection = 'letters';
 let currentIndex   = 0;
 let currentData    = LETTERS;
 let spellEnabled   = true;
-let musicOn        = true;
+let musicOn        = false;
 let isReadingAll   = false;
 let readAllStop    = false;
 
@@ -948,6 +948,7 @@ function getAudioCtx() {
 }
 
 // Play a single beep
+const activeOscillators = [];
 function beep(freq, duration, type='sine', volume=0.3, startTime=0) {
   try {
     const ctx  = getAudioCtx();
@@ -961,7 +962,19 @@ function beep(freq, duration, type='sine', volume=0.3, startTime=0) {
     gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + startTime + duration);
     osc.start(ctx.currentTime + startTime);
     osc.stop(ctx.currentTime + startTime + duration + 0.05);
+    activeOscillators.push({ osc, gain });
+    osc.onended = () => {
+      const idx = activeOscillators.findIndex(o => o.osc === osc);
+      if (idx > -1) activeOscillators.splice(idx, 1);
+    };
   } catch(e) {}
+}
+
+function stopAllOscillators() {
+  activeOscillators.forEach(({ osc, gain }) => {
+    try { gain.gain.setValueAtTime(0, getAudioCtx().currentTime); osc.stop(); } catch(e) {}
+  });
+  activeOscillators.length = 0;
 }
 
 // Pop sound — tile tap
@@ -1024,6 +1037,7 @@ function playBgMusic() {
 function stopBgMusic() {
   bgPlaying = false;
   clearTimeout(bgLoopId);
+  stopAllOscillators();
 }
 
 // Start music after first user interaction (browser policy)
@@ -1168,7 +1182,10 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
     btn.classList.add('active');
     document.getElementById('panel-' + btn.dataset.tab).classList.add('active');
     currentSection = btn.dataset.tab;
-    currentData    = SECTIONS[currentSection].data;
+    // Words tab has its own data structure, not in SECTIONS
+    if (SECTIONS[currentSection]) {
+      currentData = SECTIONS[currentSection].data;
+    }
   });
 });
 
@@ -1557,37 +1574,74 @@ function showQuizQuestion() {
 
 function handleQuizAnswer(btn, chosen, correct) {
   if (quizAnswered) return;
-  quizAnswered = true;
 
   if (chosen === correct) {
+    quizAnswered = true;
     btn.classList.add('correct');
     quizCurrentScore++;
     quizScore.textContent = quizCurrentScore;
     playChime();
     spawnConfetti(25);
+    setTimeout(() => {
+      quizCurrentQ++;
+      showQuizQuestion();
+    }, 1100);
   } else {
+    // Wrong — shake, buzz, stay on same question
     btn.classList.add('wrong');
-    // Show correct
-    document.querySelectorAll('.quiz-choice').forEach(b => {
-      if (b.textContent === correct) b.classList.add('correct');
-    });
     beep(200, 0.3, 'sawtooth', 0.15);
+    setTimeout(() => btn.classList.remove('wrong'), 600);
   }
+}
 
-  setTimeout(() => {
-    quizCurrentQ++;
-    showQuizQuestion();
-  }, 1100);
+// Quiz scores per family
+const quizScores = {}; // familyIndex -> { score, total }
+
+function updateFamilyScoreBadge(familyIndex) {
+  const tileEl = document.getElementById(`tile-words-${familyIndex}`);
+  if (!tileEl) return;
+  const sc = quizScores[familyIndex];
+  if (!sc) return;
+  // Remove existing badge
+  const existing = tileEl.querySelector('.score-badge');
+  if (existing) existing.remove();
+  const stars = sc.score === sc.total ? '⭐' : sc.score >= sc.total/2 ? '🌟' : '💪';
+  const badge = document.createElement('div');
+  badge.className = 'score-badge';
+  badge.style.cssText = `
+    position:absolute; bottom:5px; right:5px;
+    background:rgba(0,0,0,0.25); color:#fff;
+    font-size:0.55rem; font-weight:900;
+    border-radius:20px; padding:2px 6px;
+    font-family:'Nunito',sans-serif;
+    z-index:3;
+  `;
+  badge.textContent = `${stars} ${sc.score}/${sc.total}`;
+  tileEl.appendChild(badge);
 }
 
 function finishQuiz() {
   closeQuiz();
   const total = quizQuestions.length;
   const fam   = WORD_FAMILIES[currentFamilyIndex];
+
+  // Save score
+  quizScores[currentFamilyIndex] = { score: quizCurrentScore, total };
+  updateFamilyScoreBadge(currentFamilyIndex);
+
+  // Stars rating
+  const stars = quizCurrentScore === total ? '⭐⭐⭐' :
+                quizCurrentScore >= total * 0.66 ? '⭐⭐' : '⭐';
+  const msg = quizCurrentScore === total
+    ? 'Perfect score! You are a star! 🌟'
+    : quizCurrentScore >= total * 0.66
+    ? 'Great job! Keep practising!'
+    : 'Good try! Let\'s try again!';
+
   document.getElementById('wellDoneSub').textContent =
-    `${fam.family} Quiz: ${quizCurrentScore} out of ${total}! 🎉`;
+    `${fam.family} Quiz: ${quizCurrentScore}/${total} ${stars}\n${msg}`;
   document.getElementById('wellDoneOverlay').classList.add('active');
-  spawnConfetti(60);
+  spawnConfetti(quizCurrentScore === total ? 80 : 40);
   playChime();
 }
 
