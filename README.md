@@ -11,3 +11,5 @@ v1.0
 ✅ Progress Tracker
 
 ✅ Well Done screen
+
+✅ Mobile Audio Fix: Robust speech synthesis logic (Issue #8)
