@@ -1,0 +1,32 @@
+name: Claude Issue Bot
+on:
+  issue_comment:
+    types: [created]
+  issues:
+    types: [opened]
+
+jobs:
+  claude_fix:
+    # This ensures it only runs if you tag @claude AND it's not the bot replying to itself
+    if: |
+      github.actor != 'claude[bot]' && 
+      (contains(github.event.comment.body, '@claude') || contains(github.event.issue.body, '@claude'))
+    
+    runs-on: ubuntu-latest
+    
+    permissions:
+      contents: write       # For editing code
+      pull-requests: write  # For opening PRs
+      issues: write         # For replying to you
+      id-token: write      # THE OIDC FIX
+      
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          
+      - name: Run Claude Code
+        uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
