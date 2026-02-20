@@ -2,118 +2,138 @@
 //  DATA
 // ══════════════════════════════════════════════════════
 const LETTERS = [
-  {letter:'A',emoji:'🍎',word:'Apple'},
-  {letter:'B',emoji:'⚽',word:'Ball'},
-  {letter:'C',emoji:'🐱',word:'Cat'},
-  {letter:'D',emoji:'🐶',word:'Dog'},
-  {letter:'E',emoji:'🐘',word:'Elephant'},
-  {letter:'F',emoji:'🐟',word:'Fish'},
-  {letter:'G',emoji:'🍇',word:'Grapes'},
-  {letter:'H',emoji:'🎩',word:'Hat'},
-  {letter:'I',emoji:'🍦',word:'Ice Cream'},
-  {letter:'J',emoji:'🪼',word:'Jellyfish'},
-  {letter:'K',emoji:'🪁',word:'Kite'},
-  {letter:'L',emoji:'🦁',word:'Lion'},
-  {letter:'M',emoji:'🐒',word:'Monkey'},
-  {letter:'N',emoji:'🪺',word:'Nest'},
-  {letter:'O',emoji:'🍊',word:'Orange'},
-  {letter:'P',emoji:'🐼',word:'Panda'},
-  {letter:'Q',emoji:'👸',word:'Queen'},
-  {letter:'R',emoji:'🌈',word:'Rainbow'},
-  {letter:'S',emoji:'☀️',word:'Sun'},
-  {letter:'T',emoji:'🐯',word:'Tiger'},
-  {letter:'U',emoji:'☂️',word:'Umbrella'},
-  {letter:'V',emoji:'🎻',word:'Violin'},
-  {letter:'W',emoji:'🍉',word:'Watermelon'},
-  {letter:'X',emoji:'🎄',word:'Xmas'},
-  {letter:'Y',emoji:'🪀',word:'Yo-yo'},
-  {letter:'Z',emoji:'🦓',word:'Zebra'},
+  { letter: 'A', emoji: '🍎', word: 'Apple' },
+  { letter: 'B', emoji: '⚽', word: 'Ball' },
+  { letter: 'C', emoji: '🐱', word: 'Cat' },
+  { letter: 'D', emoji: '🐶', word: 'Dog' },
+  { letter: 'E', emoji: '🐘', word: 'Elephant' },
+  { letter: 'F', emoji: '🐟', word: 'Fish' },
+  { letter: 'G', emoji: '🍇', word: 'Grapes' },
+  { letter: 'H', emoji: '🎩', word: 'Hat' },
+  { letter: 'I', emoji: '🍦', word: 'Ice Cream' },
+  { letter: 'J', emoji: '🪼', word: 'Jellyfish' },
+  { letter: 'K', emoji: '🪁', word: 'Kite' },
+  { letter: 'L', emoji: '🦁', word: 'Lion' },
+  { letter: 'M', emoji: '🐒', word: 'Monkey' },
+  { letter: 'N', emoji: '🪺', word: 'Nest' },
+  { letter: 'O', emoji: '🍊', word: 'Orange' },
+  { letter: 'P', emoji: '🐼', word: 'Panda' },
+  { letter: 'Q', emoji: '👸', word: 'Queen' },
+  { letter: 'R', emoji: '🌈', word: 'Rainbow' },
+  { letter: 'S', emoji: '☀️', word: 'Sun' },
+  { letter: 'T', emoji: '🐯', word: 'Tiger' },
+  { letter: 'U', emoji: '☂️', word: 'Umbrella' },
+  { letter: 'V', emoji: '🎻', word: 'Violin' },
+  { letter: 'W', emoji: '🍉', word: 'Watermelon' },
+  { letter: 'X', emoji: '🎄', word: 'Xmas' },
+  { letter: 'Y', emoji: '🪀', word: 'Yo-yo' },
+  { letter: 'Z', emoji: '🦓', word: 'Zebra' },
 ];
 const NUMBERS = [
-  {num:1, word:'One',       emoji:'🍎'},{num:2, word:'Two',       emoji:'🌟'},
-  {num:3, word:'Three',     emoji:'🌸'},{num:4, word:'Four',      emoji:'🍭'},
-  {num:5, word:'Five',      emoji:'🐣'},{num:6, word:'Six',       emoji:'🍓'},
-  {num:7, word:'Seven',     emoji:'🌈'},{num:8, word:'Eight',     emoji:'🦋'},
-  {num:9, word:'Nine',      emoji:'🍀'},{num:10,word:'Ten',       emoji:'🎈'},
-  {num:11,word:'Eleven',    emoji:'⭐'},{num:12,word:'Twelve',    emoji:'🍕'},
-  {num:13,word:'Thirteen',  emoji:'🐠'},{num:14,word:'Fourteen',  emoji:'🌻'},
-  {num:15,word:'Fifteen',   emoji:'🎵'},{num:16,word:'Sixteen',   emoji:'🍦'},
-  {num:17,word:'Seventeen', emoji:'🦄'},{num:18,word:'Eighteen',  emoji:'🌺'},
-  {num:19,word:'Nineteen',  emoji:'🍇'},{num:20,word:'Twenty',    emoji:'🎉'},
+  { num: 1, word: 'One', emoji: '🍎' }, { num: 2, word: 'Two', emoji: '🌟' },
+  { num: 3, word: 'Three', emoji: '🌸' }, { num: 4, word: 'Four', emoji: '🍭' },
+  { num: 5, word: 'Five', emoji: '🐣' }, { num: 6, word: 'Six', emoji: '🍓' },
+  { num: 7, word: 'Seven', emoji: '🌈' }, { num: 8, word: 'Eight', emoji: '🦋' },
+  { num: 9, word: 'Nine', emoji: '🍀' }, { num: 10, word: 'Ten', emoji: '🎈' },
+  { num: 11, word: 'Eleven', emoji: '⭐' }, { num: 12, word: 'Twelve', emoji: '🍕' },
+  { num: 13, word: 'Thirteen', emoji: '🐠' }, { num: 14, word: 'Fourteen', emoji: '🌻' },
+  { num: 15, word: 'Fifteen', emoji: '🎵' }, { num: 16, word: 'Sixteen', emoji: '🍦' },
+  { num: 17, word: 'Seventeen', emoji: '🦄' }, { num: 18, word: 'Eighteen', emoji: '🌺' },
+  { num: 19, word: 'Nineteen', emoji: '🍇' }, { num: 20, word: 'Twenty', emoji: '🎉' },
 ];
 const WEEKDAYS = [
-  {name:'Monday',   emoji:'☀️', short:'Mon'},
-  {name:'Tuesday',  emoji:'🌤️',short:'Tue'},
-  {name:'Wednesday',emoji:'🌈', short:'Wed'},
-  {name:'Thursday', emoji:'⚡', short:'Thu'},
-  {name:'Friday',   emoji:'🎉', short:'Fri'},
-  {name:'Saturday', emoji:'🏖️',short:'Sat'},
-  {name:'Sunday',   emoji:'🌟', short:'Sun'},
+  { name: 'Monday', emoji: '☀️', short: 'Mon' },
+  { name: 'Tuesday', emoji: '🌤️', short: 'Tue' },
+  { name: 'Wednesday', emoji: '🌈', short: 'Wed' },
+  { name: 'Thursday', emoji: '⚡', short: 'Thu' },
+  { name: 'Friday', emoji: '🎉', short: 'Fri' },
+  { name: 'Saturday', emoji: '🏖️', short: 'Sat' },
+  { name: 'Sunday', emoji: '🌟', short: 'Sun' },
 ];
 const MONTHS = [
-  {name:'January',  emoji:'❄️', short:'Jan'},{name:'February', emoji:'💝', short:'Feb'},
-  {name:'March',    emoji:'🌸', short:'Mar'},{name:'April',    emoji:'🌦️',short:'Apr'},
-  {name:'May',      emoji:'🌻', short:'May'},{name:'June',     emoji:'☀️', short:'Jun'},
-  {name:'July',     emoji:'🏖️',short:'Jul'},{name:'August',   emoji:'🌊', short:'Aug'},
-  {name:'September',emoji:'🍂', short:'Sep'},{name:'October',  emoji:'🎃', short:'Oct'},
-  {name:'November', emoji:'🍁', short:'Nov'},{name:'December', emoji:'🎄', short:'Dec'},
+  { name: 'January', emoji: '❄️', short: 'Jan' }, { name: 'February', emoji: '💝', short: 'Feb' },
+  { name: 'March', emoji: '🌸', short: 'Mar' }, { name: 'April', emoji: '🌦️', short: 'Apr' },
+  { name: 'May', emoji: '🌻', short: 'May' }, { name: 'June', emoji: '☀️', short: 'Jun' },
+  { name: 'July', emoji: '🏖️', short: 'Jul' }, { name: 'August', emoji: '🌊', short: 'Aug' },
+  { name: 'September', emoji: '🍂', short: 'Sep' }, { name: 'October', emoji: '🎃', short: 'Oct' },
+  { name: 'November', emoji: '🍁', short: 'Nov' }, { name: 'December', emoji: '🎄', short: 'Dec' },
 ];
 
 const SECTIONS = {
-  letters:  { data: LETTERS,  total: 26 },
-  numbers:  { data: NUMBERS,  total: 20 },
-  weekdays: { data: WEEKDAYS, total: 7  },
-  months:   { data: MONTHS,   total: 12 },
+  letters: { data: LETTERS, total: 26 },
+  numbers: { data: NUMBERS, total: 20 },
+  weekdays: { data: WEEKDAYS, total: 7 },
+  months: { data: MONTHS, total: 12 },
 };
 
 // ── WORD FAMILIES ─────────────────────────────────────
 const WORD_FAMILIES = [
-  { family:'-AN', color:'col-red',    words:[
-    {word:'can',emoji:'🥫'},{word:'man',emoji:'👨'},{word:'fan',emoji:'🪭'}
-  ]},
-  { family:'-AT', color:'col-orange', words:[
-    {word:'mat',emoji:'🗺️'},{word:'cat',emoji:'🐱'},{word:'hat',emoji:'🎩'}
-  ]},
-  { family:'-EN', color:'col-yellow', words:[
-    {word:'hen',emoji:'🐔'},{word:'pen',emoji:'🖊️'},{word:'ten',emoji:'🔟'}
-  ]},
-  { family:'-ET', color:'col-green',  words:[
-    {word:'pet',emoji:'🐹'},{word:'jet',emoji:'✈️'},{word:'wet',emoji:'💧'}
-  ]},
-  { family:'-IN', color:'col-blue',   words:[
-    {word:'pin',emoji:'📌'},{word:'fin',emoji:'🦈'},{word:'bin',emoji:'🗑️'}
-  ]},
-  { family:'-IT', color:'col-purple', words:[
-    {word:'pit',emoji:'🕳️'},{word:'bit',emoji:'💾'},{word:'hit',emoji:'🥊'}
-  ]},
-  { family:'-OG', color:'col-pink',   words:[
-    {word:'jog',emoji:'🏃'},{word:'fog',emoji:'🌫️'},{word:'log',emoji:'🪵'}
-  ]},
-  { family:'-OT', color:'col-teal',   words:[
-    {word:'dot',emoji:'🔵'},{word:'pot',emoji:'🪴'},{word:'hot',emoji:'🔥'}
-  ]},
-  { family:'-UG', color:'col-red',    words:[
-    {word:'bug',emoji:'🐛'},{word:'hug',emoji:'🤗'},{word:'rug',emoji:'🟫'}
-  ]},
-  { family:'-UT', color:'col-orange', words:[
-    {word:'nut',emoji:'🥜'},{word:'hut',emoji:'🛖'},{word:'cut',emoji:'✂️'}
-  ]},
+  {
+    family: '-AN', color: 'col-red', words: [
+      { word: 'can', emoji: '🥫' }, { word: 'man', emoji: '👨' }, { word: 'fan', emoji: '🪭' }
+    ]
+  },
+  {
+    family: '-AT', color: 'col-orange', words: [
+      { word: 'mat', emoji: '🗺️' }, { word: 'cat', emoji: '🐱' }, { word: 'hat', emoji: '🎩' }
+    ]
+  },
+  {
+    family: '-EN', color: 'col-yellow', words: [
+      { word: 'hen', emoji: '🐔' }, { word: 'pen', emoji: '🖊️' }, { word: 'ten', emoji: '🔟' }
+    ]
+  },
+  {
+    family: '-ET', color: 'col-green', words: [
+      { word: 'pet', emoji: '🐹' }, { word: 'jet', emoji: '✈️' }, { word: 'wet', emoji: '💧' }
+    ]
+  },
+  {
+    family: '-IN', color: 'col-blue', words: [
+      { word: 'pin', emoji: '📌' }, { word: 'fin', emoji: '🦈' }, { word: 'bin', emoji: '🗑️' }
+    ]
+  },
+  {
+    family: '-IT', color: 'col-purple', words: [
+      { word: 'pit', emoji: '🕳️' }, { word: 'bit', emoji: '💾' }, { word: 'hit', emoji: '🥊' }
+    ]
+  },
+  {
+    family: '-OG', color: 'col-pink', words: [
+      { word: 'jog', emoji: '🏃' }, { word: 'fog', emoji: '🌫️' }, { word: 'log', emoji: '🪵' }
+    ]
+  },
+  {
+    family: '-OT', color: 'col-teal', words: [
+      { word: 'dot', emoji: '🔵' }, { word: 'pot', emoji: '🪴' }, { word: 'hot', emoji: '🔥' }
+    ]
+  },
+  {
+    family: '-UG', color: 'col-red', words: [
+      { word: 'bug', emoji: '🐛' }, { word: 'hug', emoji: '🤗' }, { word: 'rug', emoji: '🟫' }
+    ]
+  },
+  {
+    family: '-UT', color: 'col-orange', words: [
+      { word: 'nut', emoji: '🥜' }, { word: 'hut', emoji: '🛖' }, { word: 'cut', emoji: '✂️' }
+    ]
+  },
 ];
 
-const COLORS      = ['col-red','col-orange','col-yellow','col-green','col-blue','col-purple','col-pink','col-teal'];
-const BAND_COLORS = ['#FF6B6B','#FF9F43','#FFD93D','#6BCB77','#4D96FF','#C56BFF','#FF6EB4','#00CEC9'];
-const CONFETTI_COLORS = ['#FF6B6B','#FFD93D','#6BCB77','#4D96FF','#C56BFF','#FF9F43'];
+const COLORS = ['col-red', 'col-orange', 'col-yellow', 'col-green', 'col-blue', 'col-purple', 'col-pink', 'col-teal'];
+const BAND_COLORS = ['#FF6B6B', '#FF9F43', '#FFD93D', '#6BCB77', '#4D96FF', '#C56BFF', '#FF6EB4', '#00CEC9'];
+const CONFETTI_COLORS = ['#FF6B6B', '#FFD93D', '#6BCB77', '#4D96FF', '#C56BFF', '#FF9F43'];
 
 // ══════════════════════════════════════════════════════
 //  STATE
 // ══════════════════════════════════════════════════════
 let currentSection = 'letters';
-let currentIndex   = 0;
-let currentData    = LETTERS;
-let spellEnabled   = true;
-let musicOn        = false;
-let isReadingAll   = false;
-let readAllStop    = false;
+let currentIndex = 0;
+let currentData = LETTERS;
+let spellEnabled = true;
+let musicOn = false;
+let isReadingAll = false;
+let readAllStop = false;
 
 // Per-section visited sets
 const visited = { letters: new Set(), numbers: new Set(), weekdays: new Set(), months: new Set(), words: new Set() };
@@ -123,12 +143,23 @@ const visited = { letters: new Set(), numbers: new Set(), weekdays: new Set(), m
 // ══════════════════════════════════════════════════════
 const splash = document.getElementById('splash');
 setTimeout(() => splash.classList.add('hide'), 1800);
-setTimeout(() => splash.remove(), 2400);
+setTimeout(() => {
+  splash.remove();
+  // Attempt to unlock speech if splash is removed by timer
+  unlockSpeech();
+}, 2400);
+
+// Also unlock on first splash click
+if (splash) {
+  splash.addEventListener('click', () => {
+    unlockSpeech();
+  }, { once: true });
+}
 
 // ══════════════════════════════════════════════════════
 //  PER-SECTION BACKGROUND SHIFT
 // ══════════════════════════════════════════════════════
-const BG_CLASSES = ['bg-letters','bg-numbers','bg-weekdays','bg-months','bg-words'];
+const BG_CLASSES = ['bg-letters', 'bg-numbers', 'bg-weekdays', 'bg-months', 'bg-words'];
 function setBodyBg(section) {
   BG_CLASSES.forEach(c => document.body.classList.remove(c));
   document.body.classList.add(`bg-${section}`);
@@ -138,15 +169,15 @@ setBodyBg('letters');
 // ══════════════════════════════════════════════════════
 //  STAR PROGRESS
 // ══════════════════════════════════════════════════════
-const STAR_TOTALS = { letters:26, numbers:20, weekdays:7, months:12, words:10 };
-const MAX_STARS   = 10; // max pips shown regardless of total
+const STAR_TOTALS = { letters: 26, numbers: 20, weekdays: 7, months: 12, words: 10 };
+const MAX_STARS = 10; // max pips shown regardless of total
 
 function initStarTrack(section) {
   const track = document.getElementById(`starTrack-${section}`);
   if (!track) return;
   track.innerHTML = '';
   const total = STAR_TOTALS[section];
-  const pips  = Math.min(total, MAX_STARS);
+  const pips = Math.min(total, MAX_STARS);
   for (let i = 0; i < pips; i++) {
     const pip = document.createElement('span');
     pip.className = 'star-pip';
@@ -158,9 +189,9 @@ function initStarTrack(section) {
 
 function updateStarProgress(section, done) {
   const total = STAR_TOTALS[section];
-  const pips  = Math.min(total, MAX_STARS);
+  const pips = Math.min(total, MAX_STARS);
   const filled = Math.round((done / total) * pips);
-  const label  = document.querySelector(`#starProg-${section} .star-progress-label`);
+  const label = document.querySelector(`#starProg-${section} .star-progress-label`);
   if (label) label.textContent = `${done}/${total}`;
   for (let i = 0; i < pips; i++) {
     const pip = document.getElementById(`pip-${section}-${i}`);
@@ -197,7 +228,7 @@ animateTilesIn('letters'); // animate on load
 //  CELEBRATION VARIETY
 // ══════════════════════════════════════════════════════
 let celebrationIndex = 0;
-const BALLOON_EMOJIS = ['🎈','🎀','🌟','💛','❤️','💚','💙','💜'];
+const BALLOON_EMOJIS = ['🎈', '🎀', '🌟', '💛', '❤️', '💚', '💙', '💜'];
 
 function celebrate(intensity = 'normal') {
   const type = celebrationIndex % 3;
@@ -215,11 +246,11 @@ function spawnBalloons(count = 10) {
     b.className = 'balloon-piece';
     b.textContent = BALLOON_EMOJIS[Math.floor(Math.random() * BALLOON_EMOJIS.length)];
     b.style.cssText = `
-      left: ${Math.random()*100}%;
+      left: ${Math.random() * 100}%;
       bottom: -60px;
-      animation-delay: ${Math.random()*0.8}s;
-      animation-duration: ${1.5 + Math.random()*1}s;
-      font-size: ${1.5 + Math.random()*1.5}rem;
+      animation-delay: ${Math.random() * 0.8}s;
+      animation-duration: ${1.5 + Math.random() * 1}s;
+      font-size: ${1.5 + Math.random() * 1.5}rem;
     `;
     container.appendChild(b);
   }
@@ -236,12 +267,12 @@ function spawnFireworks(count = 4) {
       const p = document.createElement('div');
       p.className = 'firework-piece';
       const angle = (j / 12) * 360;
-      const dist  = 40 + Math.random() * 60;
-      const tx    = Math.cos(angle * Math.PI/180) * dist;
-      const ty    = Math.sin(angle * Math.PI/180) * dist;
+      const dist = 40 + Math.random() * 60;
+      const tx = Math.cos(angle * Math.PI / 180) * dist;
+      const ty = Math.sin(angle * Math.PI / 180) * dist;
       p.style.cssText = `
         left: ${cx}%; top: ${cy}%;
-        background: hsl(${Math.random()*360},90%,60%);
+        background: hsl(${Math.random() * 360},90%,60%);
         animation-delay: ${i * 0.25}s;
         animation-duration: 0.7s;
         transform-origin: center;
@@ -271,14 +302,14 @@ function getAudioCtx() {
 
 // Play a single beep
 const activeOscillators = [];
-function beep(freq, duration, type='sine', volume=0.3, startTime=0) {
+function beep(freq, duration, type = 'sine', volume = 0.3, startTime = 0) {
   try {
-    const ctx  = getAudioCtx();
-    const osc  = ctx.createOscillator();
+    const ctx = getAudioCtx();
+    const osc = ctx.createOscillator();
     const gain = ctx.createGain();
     osc.connect(gain);
     gain.connect(ctx.destination);
-    osc.type      = type;
+    osc.type = type;
     osc.frequency.setValueAtTime(freq, ctx.currentTime + startTime);
     gain.gain.setValueAtTime(volume, ctx.currentTime + startTime);
     gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + startTime + duration);
@@ -289,12 +320,12 @@ function beep(freq, duration, type='sine', volume=0.3, startTime=0) {
       const idx = activeOscillators.findIndex(o => o.osc === osc);
       if (idx > -1) activeOscillators.splice(idx, 1);
     };
-  } catch(e) {}
+  } catch (e) { }
 }
 
 function stopAllOscillators() {
   activeOscillators.forEach(({ osc, gain }) => {
-    try { gain.gain.setValueAtTime(0, getAudioCtx().currentTime); osc.stop(); } catch(e) {}
+    try { gain.gain.setValueAtTime(0, getAudioCtx().currentTime); osc.stop(); } catch (e) { }
   });
   activeOscillators.length = 0;
 }
@@ -303,7 +334,7 @@ function stopAllOscillators() {
 function playPop() {
   if (!musicOn) return;
   beep(600, 0.06, 'square', 0.15);
-  beep(900, 0.08, 'sine',   0.12, 0.05);
+  beep(900, 0.08, 'sine', 0.12, 0.05);
 }
 
 // Ding — between Read All items
@@ -323,18 +354,18 @@ function playChime() {
 let bgMusicInterval = null;
 const BG_MELODY = [
   // Twinkle twinkle style melody: C C G G A A G rest F F E E D D C
-  [523,0.18],[523,0.18],[784,0.18],[784,0.18],[880,0.18],[880,0.18],[784,0.35],
-  [0,0.15],
-  [698,0.18],[698,0.18],[659,0.18],[659,0.18],[587,0.18],[587,0.18],[523,0.35],
-  [0,0.2],
-  [784,0.18],[784,0.18],[698,0.18],[698,0.18],[659,0.18],[659,0.18],[587,0.35],
-  [0,0.15],
-  [784,0.18],[784,0.18],[698,0.18],[698,0.18],[659,0.18],[659,0.18],[587,0.35],
-  [0,0.25],
+  [523, 0.18], [523, 0.18], [784, 0.18], [784, 0.18], [880, 0.18], [880, 0.18], [784, 0.35],
+  [0, 0.15],
+  [698, 0.18], [698, 0.18], [659, 0.18], [659, 0.18], [587, 0.18], [587, 0.18], [523, 0.35],
+  [0, 0.2],
+  [784, 0.18], [784, 0.18], [698, 0.18], [698, 0.18], [659, 0.18], [659, 0.18], [587, 0.35],
+  [0, 0.15],
+  [784, 0.18], [784, 0.18], [698, 0.18], [698, 0.18], [659, 0.18], [659, 0.18], [587, 0.35],
+  [0, 0.25],
 ];
 
 let bgPlaying = false;
-let bgLoopId  = null;
+let bgLoopId = null;
 
 function playBgMusic() {
   if (!musicOn || bgPlaying) return;
@@ -377,17 +408,17 @@ const btnMusic = document.getElementById('btnMusic');
 btnMusic.addEventListener('click', () => {
   musicOn = !musicOn;
   btnMusic.textContent = musicOn ? '🎵 Music: ON' : '🔇 Music: OFF';
-  btnMusic.classList.toggle('on',  musicOn);
+  btnMusic.classList.toggle('on', musicOn);
   btnMusic.classList.toggle('off', !musicOn);
-  if (musicOn)  { musicStarted = false; tryStartMusic(); }
-  else          { stopBgMusic(); }
+  if (musicOn) { musicStarted = false; tryStartMusic(); }
+  else { stopBgMusic(); }
 });
 
 // ══════════════════════════════════════════════════════
 //  SPELL TOGGLE
 // ══════════════════════════════════════════════════════
 const spellToggle = document.getElementById('spellToggle');
-const spellLabel  = document.getElementById('spellLabel');
+const spellLabel = document.getElementById('spellLabel');
 spellToggle.addEventListener('change', () => {
   spellEnabled = spellToggle.checked;
   spellLabel.textContent = spellEnabled ? 'ON' : 'OFF';
@@ -396,10 +427,39 @@ spellToggle.addEventListener('change', () => {
 // ══════════════════════════════════════════════════════
 //  VOICE
 // ══════════════════════════════════════════════════════
+// Prevent GC on mobile: maintain a global reference to active utterances
+let speechQueue = [];
+
+// Interaction unlock for mobile browsers
+function unlockSpeech() {
+  if (window.speechSynthesis) {
+    const u = new SpeechSynthesisUtterance(' ');
+    u.volume = 0;
+    window.speechSynthesis.speak(u);
+    console.log("Speech synthesis unlocked.");
+  }
+}
+
+// Warm up voices
+if (window.speechSynthesis) {
+  window.speechSynthesis.onvoiceschanged = () => {
+    window.speechSynthesis.getVoices();
+  };
+}
+
 // Use device default voice — best natural voice per platform
-function mkU(text, rate=0.72, pitch=1.35) {
+function mkU(text, rate = 0.72, pitch = 1.35) {
   const u = new SpeechSynthesisUtterance(text);
   u.rate = rate; u.pitch = pitch;
+
+  // Keep reference until finished to avoid GC on certain browsers
+  speechQueue.push(u);
+  u.onend = () => {
+    const idx = speechQueue.indexOf(u);
+    if (idx > -1) speechQueue.splice(idx, 1);
+  };
+  u.onerror = u.onend;
+
   return u;
 }
 
@@ -426,10 +486,10 @@ function buildGrid(containerId, section, items, mainFn, emojiFn, subFn, fontSize
   });
 }
 
-buildGrid('grid-letters',  'letters',  LETTERS,  d=>d.letter, d=>d.emoji, d=>d.word,  '2.1rem');
-buildGrid('grid-numbers',  'numbers',  NUMBERS,  d=>d.num,    d=>d.emoji, d=>d.word,  '2.1rem');
-buildGrid('grid-weekdays', 'weekdays', WEEKDAYS, d=>d.short,  d=>d.emoji, d=>d.name,  '1.35rem');
-buildGrid('grid-months',   'months',   MONTHS,   d=>d.short,  d=>d.emoji, d=>d.name,  '1.35rem');
+buildGrid('grid-letters', 'letters', LETTERS, d => d.letter, d => d.emoji, d => d.word, '2.1rem');
+buildGrid('grid-numbers', 'numbers', NUMBERS, d => d.num, d => d.emoji, d => d.word, '2.1rem');
+buildGrid('grid-weekdays', 'weekdays', WEEKDAYS, d => d.short, d => d.emoji, d => d.name, '1.35rem');
+buildGrid('grid-months', 'months', MONTHS, d => d.short, d => d.emoji, d => d.name, '1.35rem');
 
 // Build word family tiles
 (function buildWordFamilyGrid() {
@@ -440,8 +500,8 @@ buildGrid('grid-months',   'months',   MONTHS,   d=>d.short,  d=>d.emoji, d=>d.n
     tile.id = `tile-words-${i}`;
     tile.innerHTML = `
       <div class="t-main" style="font-size:1.6rem">${fam.family}</div>
-      <div class="t-emoji">${fam.words.map(w=>w.emoji).join('')}</div>
-      <div class="t-sub">${fam.words.map(w=>w.word).join(' · ')}</div>
+      <div class="t-emoji">${fam.words.map(w => w.emoji).join('')}</div>
+      <div class="t-sub">${fam.words.map(w => w.word).join(' · ')}</div>
     `;
     tile.addEventListener('click', () => {
       playPop();
@@ -462,16 +522,16 @@ function markVisited(section, index) {
 }
 
 function updateProgress(section) {
-  const total   = SECTIONS[section].total;
-  const done    = visited[section].size;
+  const total = SECTIONS[section].total;
+  const done = visited[section].size;
   updateStarProgress(section, done);
 
   // Old progress bar (hidden via CSS but kept for compatibility)
   const pb = document.getElementById(`prog-${section}`);
-  if (pb) pb.style.width = Math.round((done/total)*100) + '%';
+  if (pb) pb.style.width = Math.round((done / total) * 100) + '%';
 
   const starCount = Math.floor((done / total) * 5);
-  const starsEl   = document.getElementById(`stars-${section}`);
+  const starsEl = document.getElementById(`stars-${section}`);
   if (starsEl) starsEl.textContent = starCount > 0 ? '⭐'.repeat(starCount) + ` ${done} visited!` : '';
 
   document.querySelectorAll(`[id^="tile-${section}-"]`).forEach((el, i) => {
@@ -499,7 +559,7 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
 // ══════════════════════════════════════════════════════
 //  READ ALL
 // ══════════════════════════════════════════════════════
-['letters','numbers','weekdays','months'].forEach(sec => {
+['letters', 'numbers', 'weekdays', 'months'].forEach(sec => {
   document.getElementById(`readAll-${sec}`).addEventListener('click', () => {
     if (isReadingAll && currentSection === sec) { stopReadAll(); return; }
     if (isReadingAll) stopReadAll();
@@ -508,10 +568,10 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
 });
 
 function startReadAll(section) {
-  isReadingAll   = true;
-  readAllStop    = false;
+  isReadingAll = true;
+  readAllStop = false;
   currentSection = section;
-  currentData    = SECTIONS[section].data;
+  currentData = SECTIONS[section].data;
 
   const btn = document.getElementById(`readAll-${section}`);
   btn.textContent = '⏹ Stop';
@@ -521,11 +581,11 @@ function startReadAll(section) {
 }
 
 function stopReadAll() {
-  readAllStop  = true;
+  readAllStop = true;
   isReadingAll = false;
   window.speechSynthesis && window.speechSynthesis.cancel();
   clearAllHighlights();
-  ['letters','numbers','weekdays','months'].forEach(sec => {
+  ['letters', 'numbers', 'weekdays', 'months'].forEach(sec => {
     const btn = document.getElementById(`readAll-${sec}`);
     btn.classList.remove('stop');
     btn.textContent = '▶ Read All';
@@ -548,8 +608,8 @@ function readAllSequence(section, index) {
     return;
   }
 
-  const item    = data[index];
-  const tileEl  = document.getElementById(`tile-${section}-${index}`);
+  const item = data[index];
+  const tileEl = document.getElementById(`tile-${section}-${index}`);
 
   clearAllHighlights();
   if (tileEl) {
@@ -608,8 +668,8 @@ function markAllVisited(section) {
 //  WELL DONE
 // ══════════════════════════════════════════════════════
 const wellDoneOverlay = document.getElementById('wellDoneOverlay');
-const wellDoneSub     = document.getElementById('wellDoneSub');
-const labels = { letters:'Letters', numbers:'Numbers', weekdays:'Weekdays', months:'Months', words:'Word Families' };
+const wellDoneSub = document.getElementById('wellDoneSub');
+const labels = { letters: 'Letters', numbers: 'Numbers', weekdays: 'Weekdays', months: 'Months', words: 'Word Families' };
 
 function showWellDone(section) {
   wellDoneSub.textContent = `You finished all the ${labels[section]}! 🎉`;
@@ -625,24 +685,24 @@ document.getElementById('btnWellDoneClose').addEventListener('click', () => {
 // ══════════════════════════════════════════════════════
 //  MODAL
 // ══════════════════════════════════════════════════════
-const overlay      = document.getElementById('modalOverlay');
-const modalBand    = document.getElementById('modalBand');
-const modalMain    = document.getElementById('modalMain');
+const overlay = document.getElementById('modalOverlay');
+const modalBand = document.getElementById('modalBand');
+const modalMain = document.getElementById('modalMain');
 const modalWordLbl = document.getElementById('modalWordLabel');
-const modalEmoji   = document.getElementById('modalEmoji');
-const countGrid    = document.getElementById('countGrid');
-const btnClose     = document.getElementById('btnClose');
-const btnSpeak     = document.getElementById('btnSpeak');
-const btnPrev      = document.getElementById('btnPrev');
-const btnNext      = document.getElementById('btnNext');
-const navCounter   = document.getElementById('navCounter');
-const speakDots    = document.getElementById('speakDots');
+const modalEmoji = document.getElementById('modalEmoji');
+const countGrid = document.getElementById('countGrid');
+const btnClose = document.getElementById('btnClose');
+const btnSpeak = document.getElementById('btnSpeak');
+const btnPrev = document.getElementById('btnPrev');
+const btnNext = document.getElementById('btnNext');
+const navCounter = document.getElementById('navCounter');
+const speakDots = document.getElementById('speakDots');
 
 function openModal(section, index) {
   if (isReadingAll) stopReadAll();
   currentSection = section;
-  currentData    = SECTIONS[section].data;
-  currentIndex   = index;
+  currentData = SECTIONS[section].data;
+  currentIndex = index;
   updateModal();
   overlay.classList.add('active');
   celebrate('normal');
@@ -660,15 +720,15 @@ function updateModal() {
   countGrid.style.display = 'none';
 
   if (currentSection === 'letters') {
-    modalMain.textContent    = item.letter;
+    modalMain.textContent = item.letter;
     modalWordLbl.textContent = item.word;
-    modalEmoji.textContent   = item.emoji;
+    modalEmoji.textContent = item.emoji;
 
   } else if (currentSection === 'numbers') {
-    modalMain.textContent    = item.num;
+    modalMain.textContent = item.num;
     modalWordLbl.textContent = item.word;
     modalEmoji.style.display = 'none';
-    countGrid.style.display  = 'flex';
+    countGrid.style.display = 'flex';
     const size = item.num <= 5 ? '2.4rem' : item.num <= 10 ? '2rem' : item.num <= 15 ? '1.6rem' : '1.3rem';
     for (let i = 0; i < item.num; i++) {
       const span = document.createElement('span');
@@ -678,14 +738,14 @@ function updateModal() {
     }
 
   } else if (currentSection === 'weekdays') {
-    modalMain.textContent    = item.short;
+    modalMain.textContent = item.short;
     modalWordLbl.textContent = item.name;
-    modalEmoji.textContent   = item.emoji;
+    modalEmoji.textContent = item.emoji;
 
   } else {
-    modalMain.textContent    = item.short;
+    modalMain.textContent = item.short;
     modalWordLbl.textContent = item.name;
-    modalEmoji.textContent   = item.emoji;
+    modalEmoji.textContent = item.emoji;
   }
 
   modalEmoji.style.animation = 'none';
@@ -717,9 +777,9 @@ btnSpeak.addEventListener('click', speakCurrent);
 document.addEventListener('keydown', e => {
   if (!overlay.classList.contains('active')) return;
   if (e.key === 'ArrowRight') btnNext.click();
-  if (e.key === 'ArrowLeft')  btnPrev.click();
-  if (e.key === 'Escape')     closeModal();
-  if (e.key === ' ')          { e.preventDefault(); speakCurrent(); }
+  if (e.key === 'ArrowLeft') btnPrev.click();
+  if (e.key === 'Escape') closeModal();
+  if (e.key === ' ') { e.preventDefault(); speakCurrent(); }
 });
 
 // ══════════════════════════════════════════════════════
@@ -736,7 +796,7 @@ function buildFullUtterances(section, item) {
   if (section === 'letters') {
     uList.push(mkU(`${item.letter} for ${item.word}`, 0.72, 1.35));
     if (spellEnabled) {
-      item.word.replace(/\s/g,'').split('').forEach(ch => uList.push(mkU(ch, 0.62, 1.35)));
+      item.word.replace(/\s/g, '').split('').forEach(ch => uList.push(mkU(ch, 0.62, 1.35)));
       uList.push(mkU(item.word, 0.78, 1.4));
     }
   } else if (section === 'numbers') {
@@ -766,7 +826,7 @@ function speakCurrent() {
   if (!window.speechSynthesis) return;
   window.speechSynthesis.cancel();
   setSpeaking(true);
-  const item  = currentData[currentIndex];
+  const item = currentData[currentIndex];
   const uList = buildFullUtterances(currentSection, item);
   uList[uList.length - 1].onend = () => setSpeaking(false);
   uList.forEach(u => window.speechSynthesis.speak(u));
@@ -778,14 +838,14 @@ function speakCurrent() {
 let currentFamilyIndex = 0;
 
 const wordDetailOverlay = document.getElementById('wordDetailOverlay');
-const wordFamilyTitle   = document.getElementById('wordFamilyTitle');
-const wordCardsGrid     = document.getElementById('wordCardsGrid');
-const quizOverlay       = document.getElementById('quizOverlay');
-const quizQCount        = document.getElementById('quizQCount');
-const quizScore         = document.getElementById('quizScore');
-const quizEmoji         = document.getElementById('quizEmoji');
-const quizChoices       = document.getElementById('quizChoices');
-const btnQuizSpeak      = document.getElementById('btnQuizSpeak');
+const wordFamilyTitle = document.getElementById('wordFamilyTitle');
+const wordCardsGrid = document.getElementById('wordCardsGrid');
+const quizOverlay = document.getElementById('quizOverlay');
+const quizQCount = document.getElementById('quizQCount');
+const quizScore = document.getElementById('quizScore');
+const quizEmoji = document.getElementById('quizEmoji');
+const quizChoices = document.getElementById('quizChoices');
+const btnQuizSpeak = document.getElementById('btnQuizSpeak');
 
 function openWordDetail(index) {
   if (isReadingAll) stopReadAll();
@@ -819,7 +879,7 @@ function speakFamilyWords(fam) {
   window.speechSynthesis.cancel();
   const uList = [];
   // Say family name first e.g. "A T words"
-  uList.push(mkU(`${fam.family.replace('-','')} words`, 0.75, 1.35));
+  uList.push(mkU(`${fam.family.replace('-', '')} words`, 0.75, 1.35));
   fam.words.forEach(w => {
     uList.push(mkU(w.word, 0.72, 1.35));
   });
@@ -843,10 +903,10 @@ document.getElementById('btnWordDetailClose').addEventListener('click', () => {
 });
 
 // ── QUIZ ──────────────────────────────────────────────
-let quizQuestions    = [];
-let quizCurrentQ     = 0;
+let quizQuestions = [];
+let quizCurrentQ = 0;
 let quizCurrentScore = 0;
-let quizAnswered     = false;
+let quizAnswered = false;
 
 document.getElementById('btnStartQuiz').addEventListener('click', () => {
   startQuiz(currentFamilyIndex);
@@ -864,13 +924,13 @@ function startQuiz(familyIndex) {
       .flatMap(f => f.words.map(fw => fw.word));
     const shuffled = allOtherWords.sort(() => Math.random() - 0.5);
     const wrongOptions = shuffled.slice(0, 3).filter(o => o !== w.word);
-    const options = [w.word, ...wrongOptions.slice(0,3)].sort(() => Math.random() - 0.5);
+    const options = [w.word, ...wrongOptions.slice(0, 3)].sort(() => Math.random() - 0.5);
     return { word: w.word, emoji: w.emoji, options };
   });
 
-  quizCurrentQ     = 0;
+  quizCurrentQ = 0;
   quizCurrentScore = 0;
-  quizAnswered     = false;
+  quizAnswered = false;
   quizScore.textContent = '0';
   quizOverlay.classList.add('active');
   showQuizQuestion();
@@ -937,7 +997,7 @@ function updateFamilyScoreBadge(familyIndex) {
   // Remove existing badge
   const existing = tileEl.querySelector('.score-badge');
   if (existing) existing.remove();
-  const stars = sc.score === sc.total ? '⭐' : sc.score >= sc.total/2 ? '🌟' : '💪';
+  const stars = sc.score === sc.total ? '⭐' : sc.score >= sc.total / 2 ? '🌟' : '💪';
   const badge = document.createElement('div');
   badge.className = 'score-badge';
   badge.style.cssText = `
@@ -955,7 +1015,7 @@ function updateFamilyScoreBadge(familyIndex) {
 function finishQuiz() {
   closeQuiz();
   const total = quizQuestions.length;
-  const fam   = WORD_FAMILIES[currentFamilyIndex];
+  const fam = WORD_FAMILIES[currentFamilyIndex];
 
   // Save score
   quizScores[currentFamilyIndex] = { score: quizCurrentScore, total };
@@ -963,12 +1023,12 @@ function finishQuiz() {
 
   // Stars rating
   const stars = quizCurrentScore === total ? '⭐⭐⭐' :
-                quizCurrentScore >= total * 0.66 ? '⭐⭐' : '⭐';
+    quizCurrentScore >= total * 0.66 ? '⭐⭐' : '⭐';
   const msg = quizCurrentScore === total
     ? 'Perfect score! You are a star! 🌟'
     : quizCurrentScore >= total * 0.66
-    ? 'Great job! Keep practising!'
-    : 'Good try! Let\'s try again!';
+      ? 'Great job! Keep practising!'
+      : 'Good try! Let\'s try again!';
 
   document.getElementById('wellDoneSub').textContent =
     `${fam.family} Quiz: ${quizCurrentScore}/${total} ${stars}\n${msg}`;
@@ -991,10 +1051,10 @@ btnQuizSpeak.addEventListener('click', () => {
 // Update progress for words section (10 families)
 function updateWordsProgress() {
   const total = 10;
-  const done  = visited['words'].size;
+  const done = visited['words'].size;
   updateStarProgress('words', done);
   const starCount = Math.floor((done / total) * 5);
-  const starsEl   = document.getElementById('stars-words');
+  const starsEl = document.getElementById('stars-words');
   if (starsEl) starsEl.textContent = starCount > 0 ? '⭐'.repeat(starCount) + ` ${done} visited!` : '';
   document.querySelectorAll('[id^="tile-words-"]').forEach((el, i) => {
     el.classList.toggle('visited', visited['words'].has(i));
@@ -1011,14 +1071,14 @@ function spawnConfetti(count = 30) {
     const p = document.createElement('div');
     p.className = 'confetti-piece';
     p.style.cssText = `
-      left: ${Math.random()*100}%;
+      left: ${Math.random() * 100}%;
       top: -10px;
-      background: ${CONFETTI_COLORS[Math.floor(Math.random()*CONFETTI_COLORS.length)]};
-      width:  ${6+Math.random()*8}px;
-      height: ${6+Math.random()*8}px;
-      border-radius: ${Math.random()>0.5?'50%':'3px'};
-      animation-delay:    ${Math.random()*0.6}s;
-      animation-duration: ${1.2+Math.random()*0.8}s;
+      background: ${CONFETTI_COLORS[Math.floor(Math.random() * CONFETTI_COLORS.length)]};
+      width:  ${6 + Math.random() * 8}px;
+      height: ${6 + Math.random() * 8}px;
+      border-radius: ${Math.random() > 0.5 ? '50%' : '3px'};
+      animation-delay:    ${Math.random() * 0.6}s;
+      animation-duration: ${1.2 + Math.random() * 0.8}s;
     `;
     container.appendChild(p);
   }
