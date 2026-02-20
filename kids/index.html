@@ -1,186 +1,211 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#FF6B6B">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="Learn & Play">
-<link rel="manifest" href="manifest.json">
-<title>Learn & Play! 🌈</title>
-<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#FF6B6B">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Learn & Play">
+  <link rel="manifest" href="manifest.json">
+  <title>Learn & Play! 🌈</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700;900&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
 
-<!-- Splash Screen -->
-<div class="splash" id="splash">
-  <span class="splash-emoji">🌈</span>
-  <div class="splash-title">Learn & Play!</div>
-  <div class="splash-sub">TAP ANYTHING TO START</div>
-</div>
+  <!-- Splash Screen -->
+  <div class="splash" id="splash">
+    <span class="splash-emoji">🌈</span>
+    <div class="splash-title">Learn & Play!</div>
+    <div class="splash-sub">TAP ANYTHING TO START</div>
+  </div>
 
-<header>
-  <h1>🌈 Learn &amp; Play!</h1>
-  <p>Tap anything to learn! 🎉</p>
-</header>
+  <header>
+    <h1>🌈 Learn &amp; Play!</h1>
+    <p>Tap anything to learn! 🎉</p>
+  </header>
 
-<!-- Top Controls -->
-<div class="top-controls">
-  <button class="btn-music off" id="btnMusic">🔇 Music: OFF</button>
+  <!-- Top Controls -->
+  <div class="top-controls">
+    <button class="btn-music off" id="btnMusic">🔇 Music: OFF</button>
 
-  <div class="spell-toggle-wrap">
-    <span>🔤 Spelling</span>
-    <label class="toggle-switch">
-      <input type="checkbox" id="spellToggle" checked>
-      <div class="toggle-track"></div>
-      <div class="toggle-knob"></div>
-    </label>
-    <span id="spellLabel">ON</span>
-  </div>
-</div>
-
-<!-- Tabs -->
-<div class="tabs">
-  <button class="tab-btn active" data-tab="letters">🔤 Letters</button>
-  <button class="tab-btn"        data-tab="numbers">🔢 Numbers</button>
-  <button class="tab-btn"        data-tab="weekdays">📅 Weekdays</button>
-  <button class="tab-btn"        data-tab="months">🗓️ Months</button>
-  <button class="tab-btn"        data-tab="words">✏️ Words</button>
-</div>
-
-<!-- Letters -->
-<div class="section-panel active" id="panel-letters">
-  <div class="section-header">
-    <div class="section-title">🔤 A to Z</div>
-    <button class="btn-read-all letters-color" id="readAll-letters">▶ Read All</button>
-  </div>
-  <div class="progress-wrap"><div class="progress-bar" id="prog-letters" style="width:0%"></div><span class="progress-label" id="progLabel-letters">0/26</span></div>
-  <div class="star-progress" id="starProg-letters">
-    <span class="star-progress-label">0/26</span>
-    <div class="star-track" id="starTrack-letters"></div>
-  </div>
-  <div class="progress-stars" id="stars-letters"></div>
-  <div class="grid grid-letters" id="grid-letters"></div>
-</div>
-
-<!-- Numbers -->
-<div class="section-panel" id="panel-numbers">
-  <div class="section-header">
-    <div class="section-title">🔢 1 to 20</div>
-    <button class="btn-read-all numbers-color" id="readAll-numbers">▶ Read All</button>
-  </div>
-  <div class="progress-wrap"><div class="progress-bar" id="prog-numbers" style="width:0%"></div><span class="progress-label" id="progLabel-numbers">0/20</span></div>
-  <div class="star-progress" id="starProg-numbers">
-    <span class="star-progress-label">0/20</span>
-    <div class="star-track" id="starTrack-numbers"></div>
-  </div>
-  <div class="progress-stars" id="stars-numbers"></div>
-  <div class="grid grid-numbers" id="grid-numbers"></div>
-</div>
-
-<!-- Weekdays -->
-<div class="section-panel" id="panel-weekdays">
-  <div class="section-header">
-    <div class="section-title">📅 Weekdays</div>
-    <button class="btn-read-all weekdays-color" id="readAll-weekdays">▶ Read All</button>
-  </div>
-  <div class="progress-wrap"><div class="progress-bar" id="prog-weekdays" style="width:0%"></div><span class="progress-label" id="progLabel-weekdays">0/7</span></div>
-  <div class="star-progress" id="starProg-weekdays">
-    <span class="star-progress-label">0/7</span>
-    <div class="star-track" id="starTrack-weekdays"></div>
-  </div>
-  <div class="progress-stars" id="stars-weekdays"></div>
-  <div class="grid grid-weekdays" id="grid-weekdays"></div>
-</div>
-
-<!-- Months -->
-<div class="section-panel" id="panel-months">
-  <div class="section-header">
-    <div class="section-title">🗓️ Months</div>
-    <button class="btn-read-all months-color" id="readAll-months">▶ Read All</button>
-  </div>
-  <div class="progress-wrap"><div class="progress-bar" id="prog-months" style="width:0%"></div><span class="progress-label" id="progLabel-months">0/12</span></div>
-  <div class="star-progress" id="starProg-months">
-    <span class="star-progress-label">0/12</span>
-    <div class="star-track" id="starTrack-months"></div>
-  </div>
-  <div class="progress-stars" id="stars-months"></div>
-  <div class="grid grid-months" id="grid-months"></div>
-</div>
-
-<!-- Words -->
-<div class="section-panel" id="panel-words">
-  <div class="section-header">
-    <div class="section-title">✏️ Word Families</div>
-  </div>
-  <div class="progress-wrap"><div class="progress-bar" id="prog-words" style="width:0%"></div><span class="progress-label" id="progLabel-words">0/10</span></div>
-  <div class="star-progress" id="starProg-words">
-    <span class="star-progress-label">0/10</span>
-    <div class="star-track" id="starTrack-words"></div>
-  </div>
-  <div class="progress-stars" id="stars-words"></div>
-  <div class="grid grid-words" id="grid-words"></div>
-</div>
-
-<!-- Word Detail Panel -->
-<div class="word-detail-overlay" id="wordDetailOverlay">
-  <div class="word-detail-panel">
-    <div class="word-detail-band"></div>
-    <button class="btn-close" id="btnWordDetailClose">✕</button>
-    <div class="word-family-title" id="wordFamilyTitle">-AT Words</div>
-    <div class="word-cards-grid" id="wordCardsGrid"></div>
-    <div class="quiz-divider">Quiz Time</div>
-    <button class="btn-start-quiz" id="btnStartQuiz">🎯 Take the Quiz!</button>
-  </div>
-</div>
-
-<!-- Quiz Overlay -->
-<div class="quiz-overlay" id="quizOverlay">
-  <div class="quiz-box">
-    <div class="quiz-band"></div>
-    <button class="btn-quiz-close" id="btnQuizClose">✕</button>
-    <div class="quiz-progress-row">
-      <div class="quiz-q-count" id="quizQCount">Q 1 / 3</div>
-      <div class="quiz-score-badge">⭐ <span id="quizScore">0</span></div>
-    </div>
-    <span class="quiz-emoji-big" id="quizEmoji">🐱</span>
-    <div class="quiz-prompt">Which spelling is correct?</div>
-    <button class="btn-quiz-speak" id="btnQuizSpeak" title="Hear the word">🔊</button>
-    <div class="quiz-choices" id="quizChoices"></div>
-  </div>
-</div>
-<div class="modal-overlay" id="modalOverlay">
-  <div class="modal">
-    <div class="modal-band" id="modalBand"></div>
-    <button class="btn-close" id="btnClose">✕</button>
-    <div class="modal-main-label" id="modalMain"></div>
-    <div class="modal-word-label" id="modalWordLabel"></div>
-    <div class="modal-emoji-sprite" id="modalEmoji"></div>
-    <div class="count-grid" id="countGrid"></div>
-    <button class="btn-speak" id="btnSpeak">🔊 Say It!</button>
-    <div class="speaking-dots" id="speakDots"><span></span><span></span><span></span></div>
-    <div class="nav-row">
-      <button class="btn-nav btn-prev" id="btnPrev">◀</button>
-      <div class="nav-counter" id="navCounter">1 / 26</div>
-      <button class="btn-nav btn-next" id="btnNext">▶</button>
+    <div class="spell-toggle-wrap">
+      <span>🔤 Spelling</span>
+      <label class="toggle-switch">
+        <input type="checkbox" id="spellToggle" checked>
+        <div class="toggle-track"></div>
+        <div class="toggle-knob"></div>
+      </label>
+      <span id="spellLabel">ON</span>
     </div>
   </div>
-</div>
 
-<!-- Well Done -->
-<div class="wellDone-overlay" id="wellDoneOverlay">
-  <div class="wellDone-box">
-    <span class="wellDone-emoji">🏆</span>
-    <div class="wellDone-title">Amazing!</div>
-    <div class="wellDone-sub" id="wellDoneSub">You finished all the Letters!</div>
-    <button class="btn-wellDone-close" id="btnWellDoneClose">🎉 Yay! Let's Go!</button>
+  <!-- Tabs -->
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="letters">🔤 Letters</button>
+    <button class="tab-btn" data-tab="numbers">🔢 Numbers</button>
+    <button class="tab-btn" data-tab="weekdays">📅 Weekdays</button>
+    <button class="tab-btn" data-tab="months">🗓️ Months</button>
+    <button class="tab-btn" data-tab="words">✏️ Words</button>
   </div>
-</div>
 
-<div class="confetti-container" id="confettiContainer"></div>
+  <!-- Letters -->
+  <div class="section-panel active" id="panel-letters">
+    <div class="section-header">
+      <div class="section-title">🔤 A to Z</div>
+      <button class="btn-read-all letters-color" id="readAll-letters">▶ Read All</button>
+    </div>
+    <div class="progress-wrap">
+      <div class="progress-bar" id="prog-letters" style="width:0%"></div><span class="progress-label"
+        id="progLabel-letters">0/26</span>
+    </div>
+    <div class="star-progress" id="starProg-letters">
+      <span class="star-progress-label">0/26</span>
+      <div class="star-track" id="starTrack-letters"></div>
+    </div>
+    <div class="progress-stars" id="stars-letters"></div>
+    <div class="grid grid-letters" id="grid-letters"></div>
+  </div>
 
-<script src="js/main.js"></script>
+  <!-- Numbers -->
+  <div class="section-panel" id="panel-numbers">
+    <div class="section-header">
+      <div class="section-title">🔢 1 to 20</div>
+      <button class="btn-read-all numbers-color" id="readAll-numbers">▶ Read All</button>
+    </div>
+    <div class="progress-wrap">
+      <div class="progress-bar" id="prog-numbers" style="width:0%"></div><span class="progress-label"
+        id="progLabel-numbers">0/20</span>
+    </div>
+    <div class="star-progress" id="starProg-numbers">
+      <span class="star-progress-label">0/20</span>
+      <div class="star-track" id="starTrack-numbers"></div>
+    </div>
+    <div class="progress-stars" id="stars-numbers"></div>
+    <div class="grid grid-numbers" id="grid-numbers"></div>
+  </div>
+
+  <!-- Weekdays -->
+  <div class="section-panel" id="panel-weekdays">
+    <div class="section-header">
+      <div class="section-title">📅 Weekdays</div>
+      <button class="btn-read-all weekdays-color" id="readAll-weekdays">▶ Read All</button>
+    </div>
+    <div class="progress-wrap">
+      <div class="progress-bar" id="prog-weekdays" style="width:0%"></div><span class="progress-label"
+        id="progLabel-weekdays">0/7</span>
+    </div>
+    <div class="star-progress" id="starProg-weekdays">
+      <span class="star-progress-label">0/7</span>
+      <div class="star-track" id="starTrack-weekdays"></div>
+    </div>
+    <div class="progress-stars" id="stars-weekdays"></div>
+    <div class="grid grid-weekdays" id="grid-weekdays"></div>
+  </div>
+
+  <!-- Months -->
+  <div class="section-panel" id="panel-months">
+    <div class="section-header">
+      <div class="section-title">🗓️ Months</div>
+      <button class="btn-read-all months-color" id="readAll-months">▶ Read All</button>
+    </div>
+    <div class="progress-wrap">
+      <div class="progress-bar" id="prog-months" style="width:0%"></div><span class="progress-label"
+        id="progLabel-months">0/12</span>
+    </div>
+    <div class="star-progress" id="starProg-months">
+      <span class="star-progress-label">0/12</span>
+      <div class="star-track" id="starTrack-months"></div>
+    </div>
+    <div class="progress-stars" id="stars-months"></div>
+    <div class="grid grid-months" id="grid-months"></div>
+  </div>
+
+  <!-- Words -->
+  <div class="section-panel" id="panel-words">
+    <div class="section-header">
+      <div class="section-title">✏️ Word Families</div>
+    </div>
+    <div class="progress-wrap">
+      <div class="progress-bar" id="prog-words" style="width:0%"></div><span class="progress-label"
+        id="progLabel-words">0/10</span>
+    </div>
+    <div class="star-progress" id="starProg-words">
+      <span class="star-progress-label">0/10</span>
+      <div class="star-track" id="starTrack-words"></div>
+    </div>
+    <div class="progress-stars" id="stars-words"></div>
+    <div class="grid grid-words" id="grid-words"></div>
+  </div>
+
+  <!-- Word Detail Panel -->
+  <div class="word-detail-overlay" id="wordDetailOverlay">
+    <div class="word-detail-panel">
+      <div class="word-detail-band"></div>
+      <button class="btn-close" id="btnWordDetailClose">✕</button>
+      <div class="word-family-title" id="wordFamilyTitle">-AT Words</div>
+      <div class="word-cards-grid" id="wordCardsGrid"></div>
+      <div class="quiz-divider">Quiz Time</div>
+      <button class="btn-start-quiz" id="btnStartQuiz">🎯 Take the Quiz!</button>
+    </div>
+  </div>
+
+  <!-- Quiz Overlay -->
+  <div class="quiz-overlay" id="quizOverlay">
+    <div class="quiz-box">
+      <div class="quiz-band"></div>
+      <button class="btn-quiz-close" id="btnQuizClose">✕</button>
+      <div class="quiz-progress-row">
+        <div class="quiz-q-count" id="quizQCount">Q 1 / 3</div>
+        <div class="quiz-score-badge">⭐ <span id="quizScore">0</span></div>
+      </div>
+      <span class="quiz-emoji-big" id="quizEmoji">🐱</span>
+      <div class="quiz-prompt">Which spelling is correct?</div>
+      <button class="btn-quiz-speak" id="btnQuizSpeak" title="Hear the word">🔊</button>
+      <div class="quiz-choices" id="quizChoices"></div>
+    </div>
+  </div>
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+      <div class="modal-band" id="modalBand"></div>
+      <button class="btn-close" id="btnClose">✕</button>
+      <div class="modal-main-label" id="modalMain"></div>
+      <div class="modal-word-label" id="modalWordLabel"></div>
+      <div class="modal-emoji-sprite" id="modalEmoji"></div>
+      <div class="count-grid" id="countGrid"></div>
+      <button class="btn-speak" id="btnSpeak">🔊 Say It!</button>
+      <div class="speaking-dots" id="speakDots"><span></span><span></span><span></span></div>
+      <div class="nav-row">
+        <button class="btn-nav btn-prev" id="btnPrev">◀</button>
+        <div class="nav-counter" id="navCounter">1 / 26</div>
+        <button class="btn-nav btn-next" id="btnNext">▶</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Well Done -->
+  <div class="wellDone-overlay" id="wellDoneOverlay">
+    <div class="wellDone-box">
+      <span class="wellDone-emoji">🏆</span>
+      <div class="wellDone-title">Amazing!</div>
+      <div class="wellDone-sub" id="wellDoneSub">You finished all the Letters!</div>
+      <button class="btn-wellDone-close" id="btnWellDoneClose">🎉 Yay! Let's Go!</button>
+    </div>
+  </div>
+
+  <div class="confetti-container" id="confettiContainer"></div>
+
+  <!-- Footer Note -->
+  <footer class="site-footer">
+    Handcrafted with ❤️ by <span class="footer-highlight">Shouryaa's Parents</span> &middot; &copy; <span
+      id="current-year"></span> &middot; For little learners everywhere 🌈
+  </footer>
+
+  <script src="js/main.js"></script>
 </body>
+
 </html>

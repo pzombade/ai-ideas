@@ -1024,3 +1024,11 @@ function spawnConfetti(count = 30) {
   }
   setTimeout(() => container.innerHTML = '', 3000);
 }
+
+// ══════════════════════════════════════════════════════
+//  FOOTER YEAR DYNAMIC INJECTION
+// ══════════════════════════════════════════════════════
+const currentYearEl = document.getElementById("current-year");
+if (currentYearEl) {
+  currentYearEl.textContent = new Date().getFullYear();
+}
