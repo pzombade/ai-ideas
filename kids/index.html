@@ -75,7 +75,10 @@
   <div class="section-panel" id="panel-numbers">
     <div class="section-header">
       <div class="section-title">🔢 1 to 20</div>
-      <button class="btn-read-all numbers-color" id="readAll-numbers">▶ Read All</button>
+      <div class="section-buttons">
+        <button class="btn-read-all numbers-color" id="readAll-numbers">▶ Read All</button>
+        <button class="btn-read-all numbers-color" id="btnNumQuiz">🎯 Quiz</button>
+      </div>
     </div>
     <div class="progress-wrap">
       <div class="progress-bar" id="prog-numbers" style="width:0%"></div><span class="progress-label"
@@ -140,6 +143,43 @@
     </div>
     <div class="progress-stars" id="stars-words"></div>
     <div class="grid grid-words" id="grid-words"></div>
+  </div>
+
+  <!-- Number Quiz Modal -->
+  <div class="number-quiz-overlay" id="numberQuizOverlay">
+    <div class="number-quiz-box">
+      <div class="number-quiz-band"></div>
+      <button class="btn-quiz-close" id="btnNumQuizClose">✕</button>
+      <div class="num-quiz-progress">
+        <div class="num-quiz-q-count" id="numQuizQCount">Q 1 / 30</div>
+        <div class="num-quiz-score-badge">⭐ <span id="numQuizScore">0</span></div>
+      </div>
+
+      <div class="num-quiz-container">
+        <div class="num-quiz-boxes">
+          <div class="num-quiz-box-item" id="numQuizBox1">1</div>
+          <div class="num-quiz-box-item" id="numQuizBox2">2</div>
+          <div class="num-quiz-box-item" id="numQuizBox3">?</div>
+        </div>
+      </div>
+
+      <input type="text" id="numQuizInput" class="num-quiz-input" placeholder="?" readonly>
+
+      <div class="num-keypad">
+        <button class="num-keypad-btn" data-digit="1">1</button>
+        <button class="num-keypad-btn" data-digit="2">2</button>
+        <button class="num-keypad-btn" data-digit="3">3</button>
+        <button class="num-keypad-btn" data-digit="4">4</button>
+        <button class="num-keypad-btn" data-digit="5">5</button>
+        <button class="num-keypad-btn" data-digit="6">6</button>
+        <button class="num-keypad-btn" data-digit="7">7</button>
+        <button class="num-keypad-btn" data-digit="8">8</button>
+        <button class="num-keypad-btn" data-digit="9">9</button>
+        <button class="num-keypad-btn" data-digit="0">0</button>
+        <button class="num-keypad-btn btn-clear" data-digit="clear">Clear</button>
+        <button class="num-keypad-btn btn-submit" data-digit="submit">Go</button>
+      </div>
+    </div>
   </div>
 
   <!-- Word Detail Panel -->
