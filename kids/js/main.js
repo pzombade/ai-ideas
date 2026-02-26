@@ -439,6 +439,8 @@ function unlockSpeech() {
     console.log("Speech synthesis unlocked.");
   }
 }
+document.addEventListener('click', unlockSpeech, { once: true });
+document.addEventListener('touchstart', unlockSpeech, { once: true });
 
 // Warm up voices
 if (window.speechSynthesis) {
@@ -886,11 +888,11 @@ function speakFamilyWords(fam) {
   uList.forEach(u => window.speechSynthesis.speak(u));
 }
 
-function speakWord(word) {
+function speakWord(word, forceNoSpell = false) {
   if (!window.speechSynthesis) return;
   window.speechSynthesis.cancel();
   const uList = [];
-  if (spellEnabled) {
+  if (spellEnabled && !forceNoSpell) {
     word.split('').forEach(ch => uList.push(mkU(ch, 0.62, 1.35)));
   }
   uList.push(mkU(word, 0.75, 1.35));
@@ -1086,9 +1088,139 @@ function spawnConfetti(count = 30) {
 }
 
 // ══════════════════════════════════════════════════════
+//  NUMBER QUIZ LOGIC
+// ══════════════════════════════════════════════════════
+let numQuizActive = false;
+let numQuizQIndex = 0;
+let numQuizScore = 0;
+let numQuizCurrentAnswer = 0;
+
+const numQuizOverlay = document.getElementById('numberQuizOverlay');
+const btnNumQuiz = document.getElementById('btnNumQuiz');
+const btnNumQuizClose = document.getElementById('btnNumQuizClose');
+const numQuizInput = document.getElementById('numQuizInput');
+const numQuizQCount = document.getElementById('numQuizQCount');
+const numQuizScoreEl = document.getElementById('numQuizScore');
+
+btnNumQuiz.addEventListener('click', openNumberQuiz);
+btnNumQuizClose.addEventListener('click', closeNumberQuiz);
+
+function openNumberQuiz() {
+  numQuizActive = true;
+  numQuizQIndex = 0;
+  numQuizScore = 0;
+  numQuizScoreEl.textContent = '0';
+  numQuizOverlay.classList.add('active');
+  generateNumberQuiz();
+}
+
+function generateNumberQuiz() {
+  numQuizInput.value = '';
+  numQuizQCount.textContent = `Q ${numQuizQIndex + 1} / 30`;
+
+  // Create a sequence (e.g., 1, 2, ?) or (?, 5, 6)
+  const type = Math.floor(Math.random() * 3);
+  const start = Math.floor(Math.random() * 18) + 1;
+  const seq = [start, start + 1, start + 2];
+
+  const box1 = document.getElementById('numQuizBox1');
+  const box2 = document.getElementById('numQuizBox2');
+  const box3 = document.getElementById('numQuizBox3');
+
+  if (type === 0) { // 1, 2, ?
+    box1.textContent = seq[0];
+    box2.textContent = seq[1];
+    box3.textContent = '?';
+    numQuizCurrentAnswer = seq[2];
+  } else if (type === 1) { // 1, ?, 3
+    box1.textContent = seq[0];
+    box2.textContent = '?';
+    box3.textContent = seq[2];
+    numQuizCurrentAnswer = seq[1];
+  } else { // ?, 2, 3
+    box1.textContent = '?';
+    box2.textContent = seq[1];
+    box3.textContent = seq[2];
+    numQuizCurrentAnswer = seq[0];
+  }
+}
+
+function checkNumberAnswer() {
+  const userVal = parseInt(numQuizInput.value);
+  if (userVal === numQuizCurrentAnswer) {
+    numQuizScore++;
+    numQuizScoreEl.textContent = numQuizScore;
+    spawnConfetti(25);
+    playPop();
+
+    // Auto-clear for next question
+    setTimeout(() => {
+      numQuizInput.value = '';
+      numQuizQIndex++;
+      if (numQuizQIndex < 30) {
+        generateNumberQuiz();
+      } else {
+        finishNumberQuiz();
+      }
+    }, 400);
+  } else {
+    numQuizInput.value = '';
+    speakWord("Try again!", true);
+  }
+}
+
+function finishNumberQuiz() {
+  numQuizOverlay.classList.remove('active');
+  document.getElementById('wellDoneSub').textContent =
+    `Number Quiz finished! You scored ${numQuizScore}/30! 🎯`;
+  document.getElementById('wellDoneOverlay').classList.add('active');
+  spawnConfetti(60);
+  playChime();
+}
+
+function closeNumberQuiz() {
+  numQuizActive = false;
+  numQuizOverlay.classList.remove('active');
+}
+
+// Keypad handling
+document.querySelectorAll('.num-keypad-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const digit = btn.dataset.digit;
+    if (digit === 'clear') {
+      numQuizInput.value = '';
+    } else if (digit === 'submit') {
+      checkNumberAnswer();
+    } else {
+      // Logic for entering digits
+      const nextValStr = numQuizInput.value + digit;
+      const nextVal = parseInt(nextValStr);
+
+      // Check if it's potentially correct (partial or full)
+      const targetStr = numQuizCurrentAnswer.toString();
+
+      if (nextValStr === targetStr) {
+        // Full correct answer entered
+        numQuizInput.value = nextValStr;
+        checkNumberAnswer();
+      } else if (targetStr.startsWith(nextValStr) && nextValStr.length < targetStr.length) {
+        // Partial correct answer (e.g. '1' for '15')
+        numQuizInput.value = nextValStr;
+      } else {
+        // Incorrect digit or too many digits
+        speakWord("Try again!", true);
+        numQuizInput.value = '';
+      }
+    }
+    playPop();
+  });
+});
+
+// ══════════════════════════════════════════════════════
 //  FOOTER YEAR DYNAMIC INJECTION
 // ══════════════════════════════════════════════════════
 const currentYearEl = document.getElementById("current-year");
 if (currentYearEl) {
   currentYearEl.textContent = new Date().getFullYear();
 }
+
