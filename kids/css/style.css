@@ -7,6 +7,7 @@
     --tab-weekdays: #6BCB77;
     --tab-months:   #C56BFF;
     --tab-words:    #FF9F43;
+    --tab-ws:       #00BCD4;
   }
 
   body {
@@ -135,11 +136,12 @@
   }
   .tab-btn:hover  { opacity: 0.72; }
   .tab-btn.active { opacity: 1; transform: translateY(-2px); box-shadow: 0 6px 0 rgba(0,0,0,0.18); }
-  .tab-btn[data-tab="letters"]  { background: var(--tab-letters); }
-  .tab-btn[data-tab="numbers"]  { background: var(--tab-numbers); }
-  .tab-btn[data-tab="weekdays"] { background: var(--tab-weekdays); }
-  .tab-btn[data-tab="months"]   { background: var(--tab-months); }
-  .tab-btn[data-tab="words"]    { background: var(--tab-words); }
+  .tab-btn[data-tab="letters"]    { background: var(--tab-letters); }
+  .tab-btn[data-tab="numbers"]    { background: var(--tab-numbers); }
+  .tab-btn[data-tab="weekdays"]   { background: var(--tab-weekdays); }
+  .tab-btn[data-tab="months"]     { background: var(--tab-months); }
+  .tab-btn[data-tab="words"]      { background: var(--tab-words); }
+  .tab-btn[data-tab="wordsearch"] { background: var(--tab-ws); }
 
   /* ── Section ── */
   .section-panel { display: none; }
@@ -183,6 +185,7 @@
   .btn-read-all.weekdays-color { background: var(--tab-weekdays); box-shadow: 0 4px 0 #1e8449; }
   .btn-read-all.months-color   { background: var(--tab-months);   box-shadow: 0 4px 0 #7d3c98; }
   .btn-read-all.words-color    { background: var(--tab-words);    box-shadow: 0 4px 0 #cc6d00; }
+  .btn-read-all.ws-color       { background: var(--tab-ws);       box-shadow: 0 4px 0 #008fa3; }
   .btn-read-all.stop { background: #FF4757 !important; box-shadow: 0 4px 0 #c0392b !important; }
 
   /* ── Word Family Grid ── */
@@ -646,6 +649,7 @@
   .wellDone-sub {
     font-family: 'Fredoka One', cursive;
     font-size: 1.1rem; color: #aaa; margin-bottom: 24px; letter-spacing: 1px;
+    white-space: pre-line;
   }
   .btn-wellDone-close {
     font-family: 'Fredoka One', cursive;
@@ -692,11 +696,12 @@
 
   /* ── Per-section background shift ── */
   body { transition: background-color 0.5s ease; }
-  body.bg-letters  { background-color: #FFF0EE; }
-  body.bg-numbers  { background-color: #EEF4FF; }
-  body.bg-weekdays { background-color: #EEFFF4; }
-  body.bg-months   { background-color: #F8EEFF; }
-  body.bg-words    { background-color: #FFF6EE; }
+  body.bg-letters    { background-color: #FFF0EE; }
+  body.bg-numbers    { background-color: #EEF4FF; }
+  body.bg-weekdays   { background-color: #EEFFF4; }
+  body.bg-months     { background-color: #F8EEFF; }
+  body.bg-words      { background-color: #FFF6EE; }
+  body.bg-wordsearch { background-color: #E8FAFE; }
 
   /* ── Tile squish animation ── */
   .tile { transition: transform 0.12s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.12s ease; }
@@ -808,3 +813,143 @@
     color: #FF6B6B;
     font-weight: 900;
   }
+
+
+/* ════════════════════════════════════════════════════
+   WORD SEARCH — Find It!
+════════════════════════════════════════════════════ */
+
+.ws-instruction {
+  max-width: 500px;
+  margin: 0 auto 12px;
+  text-align: center;
+  font-family: 'Fredoka One', cursive;
+  font-size: 0.88rem;
+  color: #aaa;
+  letter-spacing: 0.5px;
+}
+
+/* ── Word Chips (list of words to find) ── */
+.ws-word-list {
+  max-width: 500px;
+  margin: 0 auto 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  justify-content: center;
+  padding: 0 4px;
+}
+
+.ws-word-chip {
+  font-family: 'Fredoka One', cursive;
+  font-size: 0.78rem;
+  background: #fff;
+  color: #555;
+  padding: 5px 12px;
+  border-radius: 50px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  border: 2px solid #eee;
+  box-shadow: 0 2px 0 #ddd;
+  transition: all 0.35s cubic-bezier(0.34,1.56,0.64,1);
+}
+
+.ws-word-chip.ws-chip-found {
+  color: #fff !important;
+  border-color: transparent !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  text-decoration: line-through;
+  text-decoration-thickness: 2px;
+  animation: chipFound 0.4s cubic-bezier(0.34,1.56,0.64,1);
+}
+
+@keyframes chipFound {
+  0%   { transform: scale(0.85); }
+  60%  { transform: scale(1.18); }
+  100% { transform: scale(1); }
+}
+
+/* ── Found counter ── */
+.ws-found-count {
+  max-width: 500px;
+  margin: 0 auto 10px;
+  text-align: center;
+  font-family: 'Fredoka One', cursive;
+  font-size: 0.9rem;
+  color: #bbb;
+  letter-spacing: 1px;
+}
+
+/* ── The puzzle grid ── */
+.ws-grid {
+  display: grid;
+  max-width: 500px;
+  margin: 0 auto 20px;
+  gap: 3px;
+  padding: 10px;
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 6px 28px rgba(0,188,212,0.13), 0 2px 8px rgba(0,0,0,0.06);
+  border: 2px solid rgba(0,188,212,0.15);
+  /* disable native scroll / selection during drag */
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
+}
+
+/* ── Individual cell ── */
+.ws-cell {
+  aspect-ratio: 1 / 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Fredoka One', cursive;
+  /* font-size scales with viewport so the grid fills its container */
+  font-size: clamp(0.6rem, 2.4vw, 1rem);
+  color: #555;
+  border-radius: 7px;
+  background: #f7feff;
+  border: 1px solid rgba(0,188,212,0.1);
+  cursor: default;
+  transition: background 0.12s, color 0.12s, transform 0.1s;
+  position: relative;
+  z-index: 0;
+  line-height: 1;
+}
+
+/* Active drag highlight */
+.ws-cell.ws-selecting {
+  background: rgba(255, 220, 50, 0.55) !important;
+  color: #333 !important;
+  transform: scale(1.08);
+  border-color: rgba(255,200,0,0.4) !important;
+  z-index: 2;
+}
+
+/* Permanently found */
+.ws-cell.ws-found {
+  color: #fff !important;
+  border-color: transparent !important;
+  font-weight: 900;
+  z-index: 1;
+  animation: cellPop 0.35s cubic-bezier(0.34,1.56,0.64,1);
+}
+
+@keyframes cellPop {
+  0%   { transform: scale(0.7); }
+  65%  { transform: scale(1.15); }
+  100% { transform: scale(1); }
+}
+
+/* ── Responsive grid column count ──
+   We set grid-template-columns from JS (12 cols),
+   but we constrain cell min size for mobile. */
+@media (max-width: 360px) {
+  .ws-grid {
+    gap: 2px;
+    padding: 7px;
+  }
+  .ws-cell {
+    border-radius: 5px;
+  }
+}
