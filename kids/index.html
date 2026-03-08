@@ -50,6 +50,7 @@
     <button class="tab-btn" data-tab="numbers">🔢 Numbers</button>
     <button class="tab-btn" data-tab="weekdays">📅 Weekdays</button>
     <button class="tab-btn" data-tab="months">🗓️ Months</button>
+    <button class="tab-btn" data-tab="flowers">🌸 Flowers</button>
     <button class="tab-btn" data-tab="words">✏️ Words</button>
   </div>
 
@@ -75,10 +76,7 @@
   <div class="section-panel" id="panel-numbers">
     <div class="section-header">
       <div class="section-title">🔢 1 to 20</div>
-      <div class="section-buttons">
-        <button class="btn-read-all numbers-color" id="readAll-numbers">▶ Read All</button>
-        <button class="btn-read-all numbers-color" id="btnNumQuiz">🎯 Quiz</button>
-      </div>
+      <button class="btn-read-all numbers-color" id="readAll-numbers">▶ Read All</button>
     </div>
     <div class="progress-wrap">
       <div class="progress-bar" id="prog-numbers" style="width:0%"></div><span class="progress-label"
@@ -128,6 +126,24 @@
     <div class="grid grid-months" id="grid-months"></div>
   </div>
 
+  <!-- Flowers -->
+  <div class="section-panel" id="panel-flowers">
+    <div class="section-header">
+      <div class="section-title">🌸 Flowers</div>
+      <button class="btn-read-all flowers-color" id="readAll-flowers">▶ Read All</button>
+    </div>
+    <div class="progress-wrap">
+      <div class="progress-bar" id="prog-flowers" style="width:0%"></div><span class="progress-label"
+        id="progLabel-flowers">0/12</span>
+    </div>
+    <div class="star-progress" id="starProg-flowers">
+      <span class="star-progress-label">0/12</span>
+      <div class="star-track" id="starTrack-flowers"></div>
+    </div>
+    <div class="progress-stars" id="stars-flowers"></div>
+    <div class="grid grid-flowers" id="grid-flowers"></div>
+  </div>
+
   <!-- Words -->
   <div class="section-panel" id="panel-words">
     <div class="section-header">
@@ -143,43 +159,6 @@
     </div>
     <div class="progress-stars" id="stars-words"></div>
     <div class="grid grid-words" id="grid-words"></div>
-  </div>
-
-  <!-- Number Quiz Modal -->
-  <div class="number-quiz-overlay" id="numberQuizOverlay">
-    <div class="number-quiz-box">
-      <div class="number-quiz-band"></div>
-      <button class="btn-quiz-close" id="btnNumQuizClose">✕</button>
-      <div class="num-quiz-progress">
-        <div class="num-quiz-q-count" id="numQuizQCount">Q 1 / 30</div>
-        <div class="num-quiz-score-badge">⭐ <span id="numQuizScore">0</span></div>
-      </div>
-
-      <div class="num-quiz-container">
-        <div class="num-quiz-boxes">
-          <div class="num-quiz-box-item" id="numQuizBox1">1</div>
-          <div class="num-quiz-box-item" id="numQuizBox2">2</div>
-          <div class="num-quiz-box-item" id="numQuizBox3">?</div>
-        </div>
-      </div>
-
-      <input type="text" id="numQuizInput" class="num-quiz-input" placeholder="?" readonly>
-
-      <div class="num-keypad">
-        <button class="num-keypad-btn" data-digit="1">1</button>
-        <button class="num-keypad-btn" data-digit="2">2</button>
-        <button class="num-keypad-btn" data-digit="3">3</button>
-        <button class="num-keypad-btn" data-digit="4">4</button>
-        <button class="num-keypad-btn" data-digit="5">5</button>
-        <button class="num-keypad-btn" data-digit="6">6</button>
-        <button class="num-keypad-btn" data-digit="7">7</button>
-        <button class="num-keypad-btn" data-digit="8">8</button>
-        <button class="num-keypad-btn" data-digit="9">9</button>
-        <button class="num-keypad-btn" data-digit="0">0</button>
-        <button class="num-keypad-btn btn-clear" data-digit="clear">Clear</button>
-        <button class="num-keypad-btn btn-submit" data-digit="submit">Go</button>
-      </div>
-    </div>
   </div>
 
   <!-- Word Detail Panel -->

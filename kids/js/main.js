@@ -59,11 +59,27 @@ const MONTHS = [
   { name: 'November', emoji: '🍁', short: 'Nov' }, { name: 'December', emoji: '🎄', short: 'Dec' },
 ];
 
+const FLOWERS = [
+  { name: 'Rose', sprite: 'rose' },
+  { name: 'Sunflower', sprite: 'sunflower' },
+  { name: 'Tulip', sprite: 'tulip' },
+  { name: 'Daisy', sprite: 'daisy' },
+  { name: 'Daffodil', sprite: 'daffodil' },
+  { name: 'Lily', sprite: 'lily' },
+  { name: 'Marigold', sprite: 'marigold' },
+  { name: 'Carnation', sprite: 'carnation' },
+  { name: 'Gerbera', sprite: 'gerbera' },
+  { name: 'Orchid', sprite: 'orchid' },
+  { name: 'Dahlia', sprite: 'dahlia' },
+  // { name: 'Geranium', sprite: 'geranium' },
+];
+
 const SECTIONS = {
   letters: { data: LETTERS, total: 26 },
   numbers: { data: NUMBERS, total: 20 },
   weekdays: { data: WEEKDAYS, total: 7 },
   months: { data: MONTHS, total: 12 },
+  flowers: { data: FLOWERS, total: 12 },
 };
 
 // ── WORD FAMILIES ─────────────────────────────────────
@@ -120,20 +136,6 @@ const WORD_FAMILIES = [
   },
 ];
 
-// NUMBER SEQUENCE QUIZ DATA (1-10 only)
-const NUMBER_SEQUENCE_DATA = [
-  { num: 1, word: 'ONE', emoji: '1️⃣' },
-  { num: 2, word: 'TWO', emoji: '2️⃣' },
-  { num: 3, word: 'THREE', emoji: '3️⃣' },
-  { num: 4, word: 'FOUR', emoji: '4️⃣' },
-  { num: 5, word: 'FIVE', emoji: '5️⃣' },
-  { num: 6, word: 'SIX', emoji: '6️⃣' },
-  { num: 7, word: 'SEVEN', emoji: '7️⃣' },
-  { num: 8, word: 'EIGHT', emoji: '8️⃣' },
-  { num: 9, word: 'NINE', emoji: '9️⃣' },
-  { num: 10, word: 'TEN', emoji: '🔟' },
-];
-
 const COLORS = ['col-red', 'col-orange', 'col-yellow', 'col-green', 'col-blue', 'col-purple', 'col-pink', 'col-teal'];
 const BAND_COLORS = ['#FF6B6B', '#FF9F43', '#FFD93D', '#6BCB77', '#4D96FF', '#C56BFF', '#FF6EB4', '#00CEC9'];
 const CONFETTI_COLORS = ['#FF6B6B', '#FFD93D', '#6BCB77', '#4D96FF', '#C56BFF', '#FF9F43'];
@@ -150,14 +152,7 @@ let isReadingAll = false;
 let readAllStop = false;
 
 // Per-section visited sets
-const visited = { letters: new Set(), numbers: new Set(), weekdays: new Set(), months: new Set(), words: new Set() };
-
-// NUMBER SEQUENCE QUIZ STATE
-let numberSequenceQuestions = [];
-let numberSequenceCurrentQ = 0;
-let numberSequenceCurrentScore = 0;
-let numberSequenceSelected = []; // user's selected letter sequence
-let numberSequenceAnswered = false;
+const visited = { letters: new Set(), numbers: new Set(), weekdays: new Set(), months: new Set(), flowers: new Set(), words: new Set() };
 
 // ══════════════════════════════════════════════════════
 //  SPLASH SCREEN
@@ -180,7 +175,7 @@ if (splash) {
 // ══════════════════════════════════════════════════════
 //  PER-SECTION BACKGROUND SHIFT
 // ══════════════════════════════════════════════════════
-const BG_CLASSES = ['bg-letters', 'bg-numbers', 'bg-weekdays', 'bg-months', 'bg-words'];
+const BG_CLASSES = ['bg-letters', 'bg-numbers', 'bg-weekdays', 'bg-months', 'bg-flowers', 'bg-words'];
 function setBodyBg(section) {
   BG_CLASSES.forEach(c => document.body.classList.remove(c));
   document.body.classList.add(`bg-${section}`);
@@ -190,7 +185,7 @@ setBodyBg('letters');
 // ══════════════════════════════════════════════════════
 //  STAR PROGRESS
 // ══════════════════════════════════════════════════════
-const STAR_TOTALS = { letters: 26, numbers: 20, weekdays: 7, months: 12, words: 10 };
+const STAR_TOTALS = { letters: 26, numbers: 20, weekdays: 7, months: 12, flowers: 12, words: 10 };
 const MAX_STARS = 10; // max pips shown regardless of total
 
 function initStarTrack(section) {
@@ -299,6 +294,7 @@ function spawnFireworks(count = 4) {
         transform-origin: center;
         --tx: ${tx}px; --ty: ${ty}px;
       `;
+      // Use simpler translate animation
       p.style.animation = `none`;
       p.style.transition = `transform 0.6s ease, opacity 0.6s ease`;
       container.appendChild(p);
@@ -511,6 +507,27 @@ buildGrid('grid-numbers', 'numbers', NUMBERS, d => d.num, d => d.emoji, d => d.w
 buildGrid('grid-weekdays', 'weekdays', WEEKDAYS, d => d.short, d => d.emoji, d => d.name, '1.35rem');
 buildGrid('grid-months', 'months', MONTHS, d => d.short, d => d.emoji, d => d.name, '1.35rem');
 
+// Build flower tiles with sprite images
+(function buildFlowerGrid() {
+  const g = document.getElementById('grid-flowers');
+  FLOWERS.forEach((item, i) => {
+    const tile = document.createElement('div');
+    tile.className = `tile ${COLORS[i % COLORS.length]} flower-tile`;
+    tile.id = `tile-flowers-${i}`;
+    tile.innerHTML = `
+      <div class="t-main" style="font-size:1.55rem">${item.name}</div>
+      <div class="t-emoji flower-sprite flower-sprite-${item.sprite}"></div>
+      <div class="t-sub"></div>
+    `;
+    tile.addEventListener('click', () => {
+      playPop();
+      markVisited('flowers', i);
+      openModal('flowers', i);
+    });
+    g.appendChild(tile);
+  });
+})();
+
 // Build word family tiles
 (function buildWordFamilyGrid() {
   const g = document.getElementById('grid-words');
@@ -579,7 +596,7 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
 // ══════════════════════════════════════════════════════
 //  READ ALL
 // ══════════════════════════════════════════════════════
-['letters', 'numbers', 'weekdays', 'months'].forEach(sec => {
+['letters', 'numbers', 'weekdays', 'months', 'flowers'].forEach(sec => {
   document.getElementById(`readAll-${sec}`).addEventListener('click', () => {
     if (isReadingAll && currentSection === sec) { stopReadAll(); return; }
     if (isReadingAll) stopReadAll();
@@ -605,7 +622,7 @@ function stopReadAll() {
   isReadingAll = false;
   window.speechSynthesis && window.speechSynthesis.cancel();
   clearAllHighlights();
-  ['letters', 'numbers', 'weekdays', 'months'].forEach(sec => {
+  ['letters', 'numbers', 'weekdays', 'months', 'flowers'].forEach(sec => {
     const btn = document.getElementById(`readAll-${sec}`);
     btn.classList.remove('stop');
     btn.textContent = '▶ Read All';
@@ -671,6 +688,10 @@ function buildReadAllUtterances(section, item) {
     // Just say the day: "Monday"
     uList.push(mkU(item.name, 0.75, 1.35));
 
+  } else if (section === 'flowers') {
+    // Just say the flower: "Rose"
+    uList.push(mkU(item.name, 0.75, 1.35));
+
   } else {
     // Just say the month: "January"
     uList.push(mkU(item.name, 0.75, 1.35));
@@ -689,7 +710,7 @@ function markAllVisited(section) {
 // ══════════════════════════════════════════════════════
 const wellDoneOverlay = document.getElementById('wellDoneOverlay');
 const wellDoneSub = document.getElementById('wellDoneSub');
-const labels = { letters: 'Letters', numbers: 'Numbers', weekdays: 'Weekdays', months: 'Months', words: 'Word Families' };
+const labels = { letters: 'Letters', numbers: 'Numbers', weekdays: 'Weekdays', months: 'Months', flowers: 'Flowers', words: 'Word Families' };
 
 function showWellDone(section) {
   wellDoneSub.textContent = `You finished all the ${labels[section]}! 🎉`;
@@ -738,15 +759,19 @@ function updateModal() {
   modalEmoji.style.display = 'block';
   countGrid.innerHTML = '';
   countGrid.style.display = 'none';
+  modalWordLbl.style.display = 'none';
 
   if (currentSection === 'letters') {
     modalMain.textContent = item.letter;
     modalWordLbl.textContent = item.word;
+    modalWordLbl.style.display = 'block';
     modalEmoji.textContent = item.emoji;
+    modalEmoji.className = 'modal-emoji-sprite';
 
   } else if (currentSection === 'numbers') {
     modalMain.textContent = item.num;
     modalWordLbl.textContent = item.word;
+    modalWordLbl.style.display = 'block';
     modalEmoji.style.display = 'none';
     countGrid.style.display = 'flex';
     const size = item.num <= 5 ? '2.4rem' : item.num <= 10 ? '2rem' : item.num <= 15 ? '1.6rem' : '1.3rem';
@@ -760,17 +785,30 @@ function updateModal() {
   } else if (currentSection === 'weekdays') {
     modalMain.textContent = item.short;
     modalWordLbl.textContent = item.name;
+    modalWordLbl.style.display = 'block';
     modalEmoji.textContent = item.emoji;
+    modalEmoji.className = 'modal-emoji-sprite';
+
+  } else if (currentSection === 'flowers') {
+    modalMain.textContent = item.name;
+    modalWordLbl.style.display = 'none';
+    modalEmoji.style.display = 'block';
+    modalEmoji.className = `modal-emoji-sprite flower-sprite flower-sprite-${item.sprite}`;
+    modalEmoji.textContent = '';
 
   } else {
     modalMain.textContent = item.short;
     modalWordLbl.textContent = item.name;
+    modalWordLbl.style.display = 'block';
     modalEmoji.textContent = item.emoji;
+    modalEmoji.className = 'modal-emoji-sprite';
   }
 
-  modalEmoji.style.animation = 'none';
-  void modalEmoji.offsetWidth;
-  modalEmoji.style.animation = 'popIn 0.45s cubic-bezier(0.34,1.56,0.64,1)';
+  if (currentSection !== 'flowers') {
+    modalEmoji.style.animation = 'none';
+    void modalEmoji.offsetWidth;
+    modalEmoji.style.animation = 'popIn 0.45s cubic-bezier(0.34,1.56,0.64,1)';
+  }
 }
 
 function closeModal() {
@@ -827,6 +865,12 @@ function buildFullUtterances(section, item) {
     }
     uList.push(mkU(item.word, 0.78, 1.4));
   } else if (section === 'weekdays') {
+    uList.push(mkU(item.name, 0.75, 1.35));
+    if (spellEnabled) {
+      item.name.split('').forEach(ch => uList.push(mkU(ch, 0.62, 1.35)));
+      uList.push(mkU(item.name, 0.78, 1.4));
+    }
+  } else if (section === 'flowers') {
     uList.push(mkU(item.name, 0.75, 1.35));
     if (spellEnabled) {
       item.name.split('').forEach(ch => uList.push(mkU(ch, 0.62, 1.35)));
@@ -1079,176 +1123,6 @@ function updateWordsProgress() {
   document.querySelectorAll('[id^="tile-words-"]').forEach((el, i) => {
     el.classList.toggle('visited', visited['words'].has(i));
   });
-}
-
-// ══════════════════════════════════════════════════════
-//  NUMBER SEQUENCE QUIZ
-// ══════════════════════════════════════════════════════
-const numberSequenceOverlay = document.getElementById('numberSequenceOverlay');
-const sequenceDigit = document.getElementById('sequenceDigit');
-const sequenceSelected = document.getElementById('sequenceSelected');
-const sequenceLettersGrid = document.getElementById('sequenceLettersGrid');
-const sequenceQCount = document.getElementById('sequenceQCount');
-const sequenceScore = document.getElementById('sequenceScore');
-const btnSequenceSpeak = document.getElementById('btnSequenceSpeak');
-const btnSequenceClear = document.getElementById('btnSequenceClear');
-const btnSequenceClose = document.getElementById('btnSequenceClose');
-
-document.getElementById('btnStartNumberSequence').addEventListener('click', () => {
-  startNumberSequence();
-});
-
-btnSequenceClose.addEventListener('click', closeNumberSequence);
-btnSequenceClear.addEventListener('click', clearNumberSequenceSelection);
-btnSequenceSpeak.addEventListener('click', speakNumberWord);
-
-function startNumberSequence() {
-  // Build quiz questions from NUMBER_SEQUENCE_DATA (1-10)
-  numberSequenceQuestions = NUMBER_SEQUENCE_DATA.map(item => {
-    return {
-      num: item.num,
-      word: item.word,
-      letters: item.word.split(''),
-      emoji: item.emoji,
-    };
-  });
-
-  numberSequenceCurrentQ = 0;
-  numberSequenceCurrentScore = 0;
-  numberSequenceSelected = [];
-  numberSequenceAnswered = false;
-  sequenceScore.textContent = '0';
-  numberSequenceOverlay.classList.add('active');
-  showNumberSequenceQuestion();
-}
-
-function showNumberSequenceQuestion() {
-  if (numberSequenceCurrentQ >= numberSequenceQuestions.length) {
-    finishNumberSequence();
-    return;
-  }
-
-  numberSequenceAnswered = false;
-  numberSequenceSelected = [];
-  const q = numberSequenceQuestions[numberSequenceCurrentQ];
-  
-  sequenceQCount.textContent = `Q ${numberSequenceCurrentQ + 1} / ${numberSequenceQuestions.length}`;
-  sequenceDigit.textContent = q.num;
-  sequenceDigit.style.animation = 'none';
-  void sequenceDigit.offsetWidth;
-  sequenceDigit.style.animation = 'popIn 0.4s cubic-bezier(0.34,1.56,0.64,1)';
-
-  updateSequenceSelectionBar();
-
-  // Build shuffled letter buttons
-  const shuffledLetters = [...q.letters].sort(() => Math.random() - 0.5);
-  sequenceLettersGrid.innerHTML = '';
-  shuffledLetters.forEach((letter, idx) => {
-    const btn = document.createElement('button');
-    btn.className = 'sequence-letter-btn';
-    btn.textContent = letter;
-    btn.id = `seq-letter-${idx}`;
-    btn.addEventListener('click', () => handleLetterTap(letter, btn));
-    sequenceLettersGrid.appendChild(btn);
-  });
-
-  // Auto-speak the number word
-  setTimeout(() => speakNumberWord(), 400);
-}
-
-function handleLetterTap(letter, btn) {
-  if (numberSequenceAnswered) return;
-
-  // Add letter to selection
-  numberSequenceSelected.push({ letter, btn });
-  btn.classList.add('disabled');
-  updateSequenceSelectionBar();
-
-  // Check if answer is complete
-  if (numberSequenceSelected.length === numberSequenceQuestions[numberSequenceCurrentQ].letters.length) {
-    checkNumberSequenceAnswer();
-  }
-}
-
-function updateSequenceSelectionBar() {
-  const selected = numberSequenceSelected.map(item => item.letter).join(' ');
-  sequenceSelected.textContent = selected;
-}
-
-function clearNumberSequenceSelection() {
-  numberSequenceSelected.forEach(item => {
-    item.btn.classList.remove('disabled');
-  });
-  numberSequenceSelected = [];
-  updateSequenceSelectionBar();
-}
-
-function checkNumberSequenceAnswer() {
-  const q = numberSequenceQuestions[numberSequenceCurrentQ];
-  const userAnswer = numberSequenceSelected.map(item => item.letter).join('');
-  const correctAnswer = q.word;
-
-  if (userAnswer === correctAnswer) {
-    numberSequenceAnswered = true;
-    numberSequenceCurrentScore++;
-    sequenceScore.textContent = numberSequenceCurrentScore;
-    playChime();
-    spawnConfetti(25);
-    
-    setTimeout(() => {
-      numberSequenceCurrentQ++;
-      showNumberSequenceQuestion();
-    }, 1200);
-  } else {
-    // Wrong — buzz and shake selection bar, allow retry
-    beep(200, 0.3, 'sawtooth', 0.15);
-    const bar = document.querySelector('.sequence-selection-bar');
-    bar.style.animation = 'none';
-    void bar.offsetWidth;
-    bar.style.animation = 'wrongShake 0.4s ease';
-    setTimeout(() => clearNumberSequenceSelection(), 500);
-  }
-}
-
-function speakNumberWord() {
-  if (!window.speechSynthesis) return;
-  if (numberSequenceCurrentQ >= numberSequenceQuestions.length) return;
-  window.speechSynthesis.cancel();
-  const q = numberSequenceQuestions[numberSequenceCurrentQ];
-  const uList = [];
-  uList.push(mkU(q.word, 0.75, 1.35));
-  uList.forEach(u => window.speechSynthesis.speak(u));
-}
-
-function finishNumberSequence() {
-  closeNumberSequence();
-  const total = numberSequenceQuestions.length;
-
-  // Mark all numbers 1-10 as visited
-  for (let i = 0; i < 10; i++) {
-    visited['numbers'].add(i);
-  }
-  updateProgress('numbers');
-
-  // Stars rating
-  const stars = numberSequenceCurrentScore === total ? '⭐⭐⭐' :
-    numberSequenceCurrentScore >= total * 0.7 ? '⭐⭐' : '⭐';
-  const msg = numberSequenceCurrentScore === total
-    ? 'Perfect spelling! Amazing! 🌟'
-    : numberSequenceCurrentScore >= total * 0.7
-      ? 'Great job! Keep practicing!'
-      : 'Good try! Let\'s practice again!';
-
-  document.getElementById('wellDoneSub').textContent =
-    `Number Sequence: ${numberSequenceCurrentScore}/${total} ${stars}\n${msg}`;
-  document.getElementById('wellDoneOverlay').classList.add('active');
-  spawnConfetti(numberSequenceCurrentScore === total ? 80 : 40);
-  playChime();
-}
-
-function closeNumberSequence() {
-  numberSequenceOverlay.classList.remove('active');
-  window.speechSynthesis && window.speechSynthesis.cancel();
 }
 
 // ══════════════════════════════════════════════════════
