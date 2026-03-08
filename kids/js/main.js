@@ -59,11 +59,27 @@ const MONTHS = [
   { name: 'November', emoji: '🍁', short: 'Nov' }, { name: 'December', emoji: '🎄', short: 'Dec' },
 ];
 
+const FLOWERS = [
+  { name: 'Rose', sprite: 'rose' },
+  { name: 'Sunflower', sprite: 'sunflower' },
+  { name: 'Tulip', sprite: 'tulip' },
+  { name: 'Daisy', sprite: 'daisy' },
+  { name: 'Daffodil', sprite: 'daffodil' },
+  { name: 'Lily', sprite: 'lily' },
+  { name: 'Marigold', sprite: 'marigold' },
+  { name: 'Carnation', sprite: 'carnation' },
+  { name: 'Gerbera', sprite: 'gerbera' },
+  { name: 'Orchid', sprite: 'orchid' },
+  { name: 'Dahlia', sprite: 'dahlia' },
+  // { name: 'Geranium', sprite: 'geranium' },
+];
+
 const SECTIONS = {
   letters: { data: LETTERS, total: 26 },
   numbers: { data: NUMBERS, total: 20 },
   weekdays: { data: WEEKDAYS, total: 7 },
   months: { data: MONTHS, total: 12 },
+  flowers: { data: FLOWERS, total: 12 },
 };
 
 // ── WORD FAMILIES ─────────────────────────────────────
@@ -136,7 +152,7 @@ let isReadingAll = false;
 let readAllStop = false;
 
 // Per-section visited sets
-const visited = { letters: new Set(), numbers: new Set(), weekdays: new Set(), months: new Set(), words: new Set() };
+const visited = { letters: new Set(), numbers: new Set(), weekdays: new Set(), months: new Set(), flowers: new Set(), words: new Set() };
 
 // ══════════════════════════════════════════════════════
 //  SPLASH SCREEN
@@ -159,7 +175,7 @@ if (splash) {
 // ══════════════════════════════════════════════════════
 //  PER-SECTION BACKGROUND SHIFT
 // ══════════════════════════════════════════════════════
-const BG_CLASSES = ['bg-letters', 'bg-numbers', 'bg-weekdays', 'bg-months', 'bg-words', 'bg-wordsearch'];
+const BG_CLASSES = ['bg-letters', 'bg-numbers', 'bg-weekdays', 'bg-months', 'bg-flowers', 'bg-words'];
 function setBodyBg(section) {
   BG_CLASSES.forEach(c => document.body.classList.remove(c));
   document.body.classList.add(`bg-${section}`);
@@ -169,7 +185,7 @@ setBodyBg('letters');
 // ══════════════════════════════════════════════════════
 //  STAR PROGRESS
 // ══════════════════════════════════════════════════════
-const STAR_TOTALS = { letters: 26, numbers: 20, weekdays: 7, months: 12, words: 10 };
+const STAR_TOTALS = { letters: 26, numbers: 20, weekdays: 7, months: 12, flowers: 12, words: 10 };
 const MAX_STARS = 10; // max pips shown regardless of total
 
 function initStarTrack(section) {
@@ -491,6 +507,27 @@ buildGrid('grid-numbers', 'numbers', NUMBERS, d => d.num, d => d.emoji, d => d.w
 buildGrid('grid-weekdays', 'weekdays', WEEKDAYS, d => d.short, d => d.emoji, d => d.name, '1.35rem');
 buildGrid('grid-months', 'months', MONTHS, d => d.short, d => d.emoji, d => d.name, '1.35rem');
 
+// Build flower tiles with sprite images
+(function buildFlowerGrid() {
+  const g = document.getElementById('grid-flowers');
+  FLOWERS.forEach((item, i) => {
+    const tile = document.createElement('div');
+    tile.className = `tile ${COLORS[i % COLORS.length]} flower-tile`;
+    tile.id = `tile-flowers-${i}`;
+    tile.innerHTML = `
+      <div class="t-main" style="font-size:1.55rem">${item.name}</div>
+      <div class="t-emoji flower-sprite flower-sprite-${item.sprite}"></div>
+      <div class="t-sub"></div>
+    `;
+    tile.addEventListener('click', () => {
+      playPop();
+      markVisited('flowers', i);
+      openModal('flowers', i);
+    });
+    g.appendChild(tile);
+  });
+})();
+
 // Build word family tiles
 (function buildWordFamilyGrid() {
   const g = document.getElementById('grid-words');
@@ -552,19 +589,14 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
     currentSection = btn.dataset.tab;
     if (SECTIONS[currentSection]) currentData = SECTIONS[currentSection].data;
     setBodyBg(currentSection);
-    if (currentSection !== 'wordsearch') animateTilesIn(currentSection);
-    // Lazy init word search on first visit
-    if (currentSection === 'wordsearch' && !wsInitialized) {
-      wsInitialized = true;
-      wsInit();
-    }
+    animateTilesIn(currentSection);
   });
 });
 
 // ══════════════════════════════════════════════════════
 //  READ ALL
 // ══════════════════════════════════════════════════════
-['letters', 'numbers', 'weekdays', 'months'].forEach(sec => {
+['letters', 'numbers', 'weekdays', 'months', 'flowers'].forEach(sec => {
   document.getElementById(`readAll-${sec}`).addEventListener('click', () => {
     if (isReadingAll && currentSection === sec) { stopReadAll(); return; }
     if (isReadingAll) stopReadAll();
@@ -590,7 +622,7 @@ function stopReadAll() {
   isReadingAll = false;
   window.speechSynthesis && window.speechSynthesis.cancel();
   clearAllHighlights();
-  ['letters', 'numbers', 'weekdays', 'months'].forEach(sec => {
+  ['letters', 'numbers', 'weekdays', 'months', 'flowers'].forEach(sec => {
     const btn = document.getElementById(`readAll-${sec}`);
     btn.classList.remove('stop');
     btn.textContent = '▶ Read All';
@@ -656,6 +688,10 @@ function buildReadAllUtterances(section, item) {
     // Just say the day: "Monday"
     uList.push(mkU(item.name, 0.75, 1.35));
 
+  } else if (section === 'flowers') {
+    // Just say the flower: "Rose"
+    uList.push(mkU(item.name, 0.75, 1.35));
+
   } else {
     // Just say the month: "January"
     uList.push(mkU(item.name, 0.75, 1.35));
@@ -674,7 +710,7 @@ function markAllVisited(section) {
 // ══════════════════════════════════════════════════════
 const wellDoneOverlay = document.getElementById('wellDoneOverlay');
 const wellDoneSub = document.getElementById('wellDoneSub');
-const labels = { letters: 'Letters', numbers: 'Numbers', weekdays: 'Weekdays', months: 'Months', words: 'Word Families' };
+const labels = { letters: 'Letters', numbers: 'Numbers', weekdays: 'Weekdays', months: 'Months', flowers: 'Flowers', words: 'Word Families' };
 
 function showWellDone(section) {
   wellDoneSub.textContent = `You finished all the ${labels[section]}! 🎉`;
@@ -723,15 +759,19 @@ function updateModal() {
   modalEmoji.style.display = 'block';
   countGrid.innerHTML = '';
   countGrid.style.display = 'none';
+  modalWordLbl.style.display = 'none';
 
   if (currentSection === 'letters') {
     modalMain.textContent = item.letter;
     modalWordLbl.textContent = item.word;
+    modalWordLbl.style.display = 'block';
     modalEmoji.textContent = item.emoji;
+    modalEmoji.className = 'modal-emoji-sprite';
 
   } else if (currentSection === 'numbers') {
     modalMain.textContent = item.num;
     modalWordLbl.textContent = item.word;
+    modalWordLbl.style.display = 'block';
     modalEmoji.style.display = 'none';
     countGrid.style.display = 'flex';
     const size = item.num <= 5 ? '2.4rem' : item.num <= 10 ? '2rem' : item.num <= 15 ? '1.6rem' : '1.3rem';
@@ -745,17 +785,30 @@ function updateModal() {
   } else if (currentSection === 'weekdays') {
     modalMain.textContent = item.short;
     modalWordLbl.textContent = item.name;
+    modalWordLbl.style.display = 'block';
     modalEmoji.textContent = item.emoji;
+    modalEmoji.className = 'modal-emoji-sprite';
+
+  } else if (currentSection === 'flowers') {
+    modalMain.textContent = item.name;
+    modalWordLbl.style.display = 'none';
+    modalEmoji.style.display = 'block';
+    modalEmoji.className = `modal-emoji-sprite flower-sprite flower-sprite-${item.sprite}`;
+    modalEmoji.textContent = '';
 
   } else {
     modalMain.textContent = item.short;
     modalWordLbl.textContent = item.name;
+    modalWordLbl.style.display = 'block';
     modalEmoji.textContent = item.emoji;
+    modalEmoji.className = 'modal-emoji-sprite';
   }
 
-  modalEmoji.style.animation = 'none';
-  void modalEmoji.offsetWidth;
-  modalEmoji.style.animation = 'popIn 0.45s cubic-bezier(0.34,1.56,0.64,1)';
+  if (currentSection !== 'flowers') {
+    modalEmoji.style.animation = 'none';
+    void modalEmoji.offsetWidth;
+    modalEmoji.style.animation = 'popIn 0.45s cubic-bezier(0.34,1.56,0.64,1)';
+  }
 }
 
 function closeModal() {
@@ -812,6 +865,12 @@ function buildFullUtterances(section, item) {
     }
     uList.push(mkU(item.word, 0.78, 1.4));
   } else if (section === 'weekdays') {
+    uList.push(mkU(item.name, 0.75, 1.35));
+    if (spellEnabled) {
+      item.name.split('').forEach(ch => uList.push(mkU(ch, 0.62, 1.35)));
+      uList.push(mkU(item.name, 0.78, 1.4));
+    }
+  } else if (section === 'flowers') {
     uList.push(mkU(item.name, 0.75, 1.35));
     if (spellEnabled) {
       item.name.split('').forEach(ch => uList.push(mkU(ch, 0.62, 1.35)));
@@ -1097,400 +1156,3 @@ const currentYearEl = document.getElementById("current-year");
 if (currentYearEl) {
   currentYearEl.textContent = new Date().getFullYear();
 }
-
-
-// ══════════════════════════════════════════════════════
-//  WORD SEARCH — Crosswords!
-// ══════════════════════════════════════════════════════
-
-// ── Word pool ─────────────────────────────────────────
-const WS_POOL_SHORT = [
-  // -AN family
-  'CAN', 'MAN', 'FAN',
-  // -AT family
-  'MAT', 'CAT', 'HAT',
-  // -EN family
-  'HEN', 'PEN', 'TEN',
-  // -ET family
-  'PET', 'JET', 'WET',
-  // -IN family
-  'PIN', 'FIN', 'BIN',
-  // -IT family
-  'PIT', 'BIT', 'HIT',
-  // -OG family
-  'JOG', 'FOG', 'LOG',
-  // -OT family
-  'DOT', 'POT', 'HOT',
-  // -UG family
-  'BUG', 'HUG', 'RUG',
-  // -UT family
-  'NUT', 'HUT', 'CUT',
-];
-
-const WS_POOL_DAYS = [
-  'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY',
-];
-
-const WS_POOL_MONTHS = [
-  'JANUARY', 'FEBRUARY', 'MARCH', 'APRIL', 'MAY', 'JUNE',
-  'JULY', 'AUGUST', 'SEPTEMBER', 'OCTOBER', 'NOVEMBER', 'DECEMBER',
-];
-
-// Combined pool — full words, no shortcuts
-const WS_POOL_ALL = [
-  ...WS_POOL_SHORT,
-  ...WS_POOL_DAYS,
-  ...WS_POOL_MONTHS,
-];
-
-// Grid is 12×12 — fits up to 12-letter words
-const WS_SIZE = 7;
-const WS_WORD_COUNT = 8;
-
-// All 8 directions: right, down-right, down, down-left, left, up-left, up, up-right
-const WS_DIRECTIONS = [
-  [0, 1], [1, 0],
-
-];
-
-// Colors used to highlight found words (matches app palette)
-const WS_HIGHLIGHT_COLORS = [
-  '#FF6B6B', '#FF9F43', '#FFD93D', '#6BCB77',
-  '#4D96FF', '#C56BFF', '#FF6EB4', '#00CEC9',
-];
-
-// ── State ─────────────────────────────────────────────
-let wsInitialized = false;
-let wsLetterGrid = [];          // 2D array of letters
-let wsPlaced = [];          // [{word, cells:[{r,c}], color, found}]
-let wsDragging = false;
-let wsStartCell = null;        // {r, c}
-let wsCurrentCells = [];         // cells currently highlighted
-
-// ── Helpers ───────────────────────────────────────────
-function wsShuffle(arr) {
-  const a = [...arr];
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
-}
-
-function wsCanPlace(grid, word, row, col, dr, dc) {
-  for (let i = 0; i < word.length; i++) {
-    const r = row + dr * i;
-    const c = col + dc * i;
-    if (r < 0 || r >= WS_SIZE || c < 0 || c >= WS_SIZE) return false;
-    // Allow overlap only if the letter matches
-    if (grid[r][c] !== '' && grid[r][c] !== word[i]) return false;
-  }
-  return true;
-}
-
-function wsPlaceWord(grid, word) {
-  const dirs = wsShuffle(WS_DIRECTIONS);
-  // Try up to 200 random positions per direction
-  for (let attempt = 0; attempt < 200; attempt++) {
-    const [dr, dc] = dirs[attempt % dirs.length];
-    const row = Math.floor(Math.random() * WS_SIZE);
-    const col = Math.floor(Math.random() * WS_SIZE);
-    if (wsCanPlace(grid, word, row, col, dr, dc)) {
-      const cells = [];
-      for (let i = 0; i < word.length; i++) {
-        grid[row + dr * i][col + dc * i] = word[i];
-        cells.push({ r: row + dr * i, c: col + dc * i });
-      }
-      return cells;
-    }
-  }
-  return null; // could not place
-}
-
-// ── Puzzle generation ─────────────────────────────────
-function wsGeneratePuzzle() {
-  // Reset state
-  wsLetterGrid = Array.from({ length: WS_SIZE }, () => Array(WS_SIZE).fill(''));
-  wsPlaced = [];
-
-  // Pick words: always include at least 2 weekdays/months for educational variety
-  const days = wsShuffle(WS_POOL_DAYS).slice(0, 2);
-  const months = wsShuffle(WS_POOL_MONTHS.filter(m => m.length <= 9)).slice(0, 2);
-  const shorts = wsShuffle(WS_POOL_SHORT).slice(0, WS_WORD_COUNT - days.length - months.length);
-  const chosen = wsShuffle([...days, ...months, ...shorts]).slice(0, WS_WORD_COUNT);
-
-  chosen.forEach((word, i) => {
-    const cells = wsPlaceWord(wsLetterGrid, word);
-    if (cells) {
-      wsPlaced.push({
-        word,
-        cells,
-        color: WS_HIGHLIGHT_COLORS[i % WS_HIGHLIGHT_COLORS.length],
-        found: false,
-      });
-    }
-  });
-
-  // If some words couldn't be placed (rare), fill with shorter alternatives
-  const missing = WS_WORD_COUNT - wsPlaced.length;
-  if (missing > 0) {
-    const fallback = wsShuffle(WS_POOL_SHORT.filter(w => !chosen.includes(w)));
-    for (let fi = 0; fi < fallback.length && wsPlaced.length < WS_WORD_COUNT; fi++) {
-      const cells = wsPlaceWord(wsLetterGrid, fallback[fi]);
-      if (cells) {
-        wsPlaced.push({
-          word: fallback[fi],
-          cells,
-          color: WS_HIGHLIGHT_COLORS[wsPlaced.length % WS_HIGHLIGHT_COLORS.length],
-          found: false,
-        });
-      }
-    }
-  }
-
-  // Fill remaining empty cells with random uppercase letters
-  const ALPHA = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-  for (let r = 0; r < WS_SIZE; r++) {
-    for (let c = 0; c < WS_SIZE; c++) {
-      if (wsLetterGrid[r][c] === '') {
-        wsLetterGrid[r][c] = ALPHA[Math.floor(Math.random() * ALPHA.length)];
-      }
-    }
-  }
-}
-
-// ── Render grid DOM ───────────────────────────────────
-function wsRenderGrid() {
-  const container = document.getElementById('wsGrid');
-  container.innerHTML = '';
-  container.style.gridTemplateColumns = `repeat(${WS_SIZE}, 1fr)`;
-
-  for (let r = 0; r < WS_SIZE; r++) {
-    for (let c = 0; c < WS_SIZE; c++) {
-      const cell = document.createElement('div');
-      cell.className = 'ws-cell';
-      cell.textContent = wsLetterGrid[r][c];
-      cell.dataset.r = r;
-      cell.dataset.c = c;
-      container.appendChild(cell);
-    }
-  }
-
-  // Re-apply found colors (after refresh we clear, but keep pattern for new puzzle)
-}
-
-// ── Render word chips ─────────────────────────────────
-function wsRenderWordList() {
-  const list = document.getElementById('wsWordList');
-  list.innerHTML = wsPlaced.map((p, i) => `
-    <span
-      class="ws-word-chip${p.found ? ' ws-chip-found' : ''}"
-      id="ws-chip-${i}"
-      style="${p.found ? `background:${p.color};border-color:${p.color};` : ''}"
-    >${p.word}</span>
-  `).join('');
-
-  // Update counter
-  const foundCount = wsPlaced.filter(p => p.found).length;
-  document.getElementById('wsFoundNum').textContent = foundCount;
-  document.getElementById('wsFoundTotal').textContent = wsPlaced.length;
-}
-
-// ── Hit-test: which cell is under a pointer coordinate ──
-function wsCellFromPoint(x, y) {
-  const container = document.getElementById('wsGrid');
-  // Use elementFromPoint for accuracy
-  const el = document.elementFromPoint(x, y);
-  if (el && el.classList.contains('ws-cell') && container.contains(el)) {
-    return { r: parseInt(el.dataset.r), c: parseInt(el.dataset.c) };
-  }
-  return null;
-}
-
-// ── Selection line snap ───────────────────────────────
-// Given start and current end cell, snap to the nearest valid word-search
-// direction (horizontal / vertical / 4 diagonals) and return all cells on
-// the line between them.
-function wsGetLineCells(start, end) {
-  if (!start) return [];
-  if (!end || (end.r === start.r && end.c === start.c)) return [start];
-
-  const rawDr = end.r - start.r;
-  const rawDc = end.c - start.c;
-  const absDr = Math.abs(rawDr);
-  const absDc = Math.abs(rawDc);
-
-  let stepR, stepC, len;
-
-  if (absDr === 0) {
-    // Purely horizontal
-    stepR = 0; stepC = rawDc > 0 ? 1 : -1; len = absDc;
-  } else if (absDc === 0) {
-    // Purely vertical
-    stepR = rawDr > 0 ? 1 : -1; stepC = 0; len = absDr;
-  } else if (absDr === absDc) {
-    // Perfect diagonal
-    stepR = rawDr > 0 ? 1 : -1; stepC = rawDc > 0 ? 1 : -1; len = absDr;
-  } else {
-    // Snap to closest valid direction by dominant axis ratio
-    const ratio = absDr / absDc;
-    if (ratio < 0.4) {
-      // Close to horizontal
-      stepR = 0; stepC = rawDc > 0 ? 1 : -1; len = absDc;
-    } else if (ratio > 2.5) {
-      // Close to vertical
-      stepR = rawDr > 0 ? 1 : -1; stepC = 0; len = absDr;
-    } else {
-      // Snap to diagonal using the larger of the two deltas
-      len = Math.max(absDr, absDc);
-      stepR = rawDr > 0 ? 1 : -1; stepC = rawDc > 0 ? 1 : -1;
-    }
-  }
-
-  const cells = [];
-  for (let i = 0; i <= len; i++) {
-    const r = start.r + stepR * i;
-    const c = start.c + stepC * i;
-    if (r >= 0 && r < WS_SIZE && c >= 0 && c < WS_SIZE) {
-      cells.push({ r, c });
-    }
-  }
-  return cells;
-}
-
-// ── Highlight / clear selection ───────────────────────
-function wsApplySelecting(cells) {
-  // Clear previous
-  document.querySelectorAll('#wsGrid .ws-cell.ws-selecting').forEach(el => {
-    el.classList.remove('ws-selecting');
-  });
-  cells.forEach(({ r, c }) => {
-    const el = document.querySelector(`#wsGrid [data-r="${r}"][data-c="${c}"]`);
-    if (el && !el.classList.contains('ws-found')) {
-      el.classList.add('ws-selecting');
-    }
-  });
-}
-
-// ── Check if selection matches any unmatched word ─────
-function wsCheckSelection(cells) {
-  if (cells.length < 2) return false;
-
-  const forward = cells.map(({ r, c }) => wsLetterGrid[r][c]).join('');
-  const backward = forward.split('').reverse().join('');
-
-  for (const placed of wsPlaced) {
-    if (placed.found) continue;
-    if (placed.word === forward || placed.word === backward) {
-      // ✅ Found!
-      placed.found = true;
-
-      // Colour the cells permanently
-      placed.cells.forEach(({ r, c }) => {
-        const el = document.querySelector(`#wsGrid [data-r="${r}"][data-c="${c}"]`);
-        if (el) {
-          el.style.background = placed.color;
-          el.classList.add('ws-found');
-          el.classList.remove('ws-selecting');
-        }
-      });
-
-      // Update chip
-      const idx = wsPlaced.indexOf(placed);
-      const chip = document.getElementById(`ws-chip-${idx}`);
-      if (chip) {
-        chip.classList.add('ws-chip-found');
-        chip.style.background = placed.color;
-        chip.style.borderColor = placed.color;
-      }
-
-      // Update counter
-      const foundCount = wsPlaced.filter(p => p.found).length;
-      document.getElementById('wsFoundNum').textContent = foundCount;
-
-      // Celebrate
-      playChime();
-      spawnConfetti(22);
-
-      // Check win condition
-      if (wsPlaced.every(p => p.found)) {
-        setTimeout(wsShowWin, 700);
-      }
-
-      return true;
-    }
-  }
-  return false;
-}
-
-// ── Win screen ────────────────────────────────────────
-function wsShowWin() {
-  celebrate('high');
-  playChime();
-  document.getElementById('wellDoneSub').textContent =
-    '🔍 You found all the words!\nYou are a super speller! 🌟';
-  document.getElementById('wellDoneOverlay').classList.add('active');
-}
-
-// ── Pointer / Mouse events ────────────────────────────
-function wsOnPointerDown(e) {
-  // Only react to cells
-  const pos = wsCellFromPoint(e.clientX, e.clientY);
-  if (!pos) return;
-  e.preventDefault();
-  wsDragging = true;
-  wsStartCell = pos;
-  wsCurrentCells = [pos];
-  wsApplySelecting(wsCurrentCells);
-}
-
-function wsOnPointerMove(e) {
-  if (!wsDragging) return;
-  e.preventDefault();
-  const pos = wsCellFromPoint(e.clientX, e.clientY);
-  if (pos) {
-    wsCurrentCells = wsGetLineCells(wsStartCell, pos);
-    wsApplySelecting(wsCurrentCells);
-  }
-}
-
-function wsOnPointerUp(e) {
-  if (!wsDragging) return;
-  e.preventDefault();
-  wsDragging = false;
-
-  // Check if the selection forms a word
-  const matched = wsCheckSelection(wsCurrentCells);
-  if (!matched) {
-    // Clear the selection visually
-    wsApplySelecting([]);
-  }
-  wsStartCell = null;
-  wsCurrentCells = [];
-}
-
-// ── Init & refresh ────────────────────────────────────
-function wsInit() {
-  wsGeneratePuzzle();
-  wsRenderGrid();
-  wsRenderWordList();
-
-  const grid = document.getElementById('wsGrid');
-
-  // Use Pointer Events API — covers both mouse and touch uniformly
-  grid.addEventListener('pointerdown', wsOnPointerDown, { passive: false });
-  grid.addEventListener('pointermove', wsOnPointerMove, { passive: false });
-  // pointerup / pointercancel on document so drag releasing outside grid still registers
-  document.addEventListener('pointerup', wsOnPointerUp);
-  document.addEventListener('pointercancel', wsOnPointerUp);
-}
-
-function wsNewPuzzle() {
-  wsGeneratePuzzle();
-  wsRenderGrid();
-  wsRenderWordList();
-  spawnConfetti(15);
-  playPop();
-}
-
-document.getElementById('btnWSRefresh').addEventListener('click', wsNewPuzzle);
