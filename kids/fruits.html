@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Fruit Shop</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet"/>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #74ebd5 0%, #ACB6E5 100%);
+      font-family: 'Fredoka One', 'Comic Sans MS', cursive;
+      padding: 20px;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .title-box {
+      display: inline-block;
+      background: linear-gradient(135deg, #f7971e, #ffd200);
+      border-radius: 20px;
+      padding: 10px 32px;
+      box-shadow: 0 6px 0 #c87a00;
+      margin-bottom: 8px;
+    }
+
+    .title-box span {
+      font-size: 32px;
+      color: #fff;
+      text-shadow: 2px 2px 0 #c87a00;
+    }
+
+    .subtitle {
+      color: #fff;
+      font-size: 16px;
+      text-shadow: 1px 1px 0 #666;
+      margin-top: 6px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: 16px;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .fruit-btn {
+      border-radius: 20px;
+      padding: 18px 10px 14px;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(.34,1.56,.64,1);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      border: 4px solid transparent;
+    }
+
+    .fruit-btn:hover {
+      transform: scale(1.05);
+    }
+
+    .fruit-btn.active {
+      transform: scale(1.12) !important;
+      background: #fff !important;
+    }
+
+    .emoji {
+      font-size: 44px;
+      transition: filter 0.2s;
+    }
+
+    .fruit-btn.active .emoji {
+      filter: drop-shadow(0 0 8px orange);
+      animation: bounce 0.4s infinite alternate;
+    }
+
+    .label {
+      font-size: 15px;
+      font-weight: bold;
+      color: #fff;
+      text-shadow: 1px 1px 0 rgba(0,0,0,0.3);
+      letter-spacing: 0.5px;
+    }
+
+    .fruit-btn.active .label {
+      text-shadow: none;
+    }
+
+    .speaker {
+      font-size: 18px;
+      display: none;
+      animation: pulse 0.5s infinite alternate;
+    }
+
+    .fruit-btn.active .speaker {
+      display: block;
+    }
+
+    @keyframes bounce {
+      from { transform: translateY(0px); }
+      to   { transform: translateY(-6px); }
+    }
+
+    @keyframes pulse {
+      from { opacity: 0.6; transform: scale(0.9); }
+      to   { opacity: 1;   transform: scale(1.1); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div class="title-box">
+      <span>🛒 Fruit Shop</span>
+    </div>
+    <p class="subtitle">👆 Tap a fruit to hear its name!</p>
+  </div>
+
+  <div class="grid" id="grid"></div>
+
+  <script>
+    const fruits = [
+      { name: "Orange",      emoji: "🍊", color: "#FF6B6B" },
+      { name: "Chikoo",      emoji: "🟤", color: "#FF9F43" },
+      { name: "Apple",       emoji: "🍎", color: "#FECA57" },
+      { name: "Papaya",      emoji: "🍈", color: "#48DBFB" },
+      { name: "Guava",       emoji: "💚", color: "#FF9FF3" },
+      { name: "Mango",       emoji: "🥭", color: "#54A0FF" },
+      { name: "Pomegranate", emoji: "🔴", color: "#5F27CD" },
+      { name: "Plum",        emoji: "🟣", color: "#00D2D3" },
+      { name: "Banana",      emoji: "🍌", color: "#1DD1A1" },
+      { name: "Watermelon",  emoji: "🍉", color: "#EE5A24" },
+      { name: "Kiwi",        emoji: "🥝", color: "#009432" },
+      { name: "Grapes",      emoji: "🍇", color: "#0652DD" },
+      { name: "Pear",        emoji: "🍐", color: "#9980FA" },
+      { name: "Pineapple",   emoji: "🍍", color: "#EA2027" },
+      { name: "Cherry",      emoji: "🍒", color: "#ED4C67" },
+      { name: "Strawberry",  emoji: "🍓", color: "#C8D6E5" },
+    ];
+
+    const grid = document.getElementById("grid");
+    let activeBtn = null;
+
+    fruits.forEach(fruit => {
+      const btn = document.createElement("button");
+      btn.className = "fruit-btn";
+      btn.style.background = `linear-gradient(145deg, ${fruit.color}cc, ${fruit.color}ff)`;
+      btn.style.boxShadow = `0 4px 0 rgba(0,0,0,0.2), 0 6px 12px rgba(0,0,0,0.1)`;
+
+      btn.innerHTML = `
+        <span class="emoji">${fruit.emoji}</span>
+        <span class="label" style="color:#fff">${fruit.name}</span>
+        <span class="speaker">🔊</span>
+      `;
+
+      btn.addEventListener("click", () => {
+        if (!("speechSynthesis" in window)) {
+          alert("Sorry, your browser doesn't support text-to-speech.");
+          return;
+        }
+
+        window.speechSynthesis.cancel();
+
+        // Reset previous
+        if (activeBtn) {
+          activeBtn.classList.remove("active");
+          activeBtn.style.background = activeBtn._origBg;
+          activeBtn.style.boxShadow = `0 4px 0 rgba(0,0,0,0.2), 0 6px 12px rgba(0,0,0,0.1)`;
+          activeBtn.style.borderColor = "transparent";
+          activeBtn.querySelector(".label").style.color = "#fff";
+        }
+
+        // Activate current
+        btn._origBg = `linear-gradient(145deg, ${fruit.color}cc, ${fruit.color}ff)`;
+        btn.classList.add("active");
+        btn.style.background = "#fff";
+        btn.style.borderColor = fruit.color;
+        btn.style.boxShadow = `0 8px 0 ${fruit.color}, 0 12px 20px rgba(0,0,0,0.2)`;
+        btn.querySelector(".label").style.color = fruit.color;
+        activeBtn = btn;
+
+        const utter = new SpeechSynthesisUtterance(fruit.name);
+        utter.rate = 0.85;
+        utter.pitch = 1.2;
+        utter.onend = () => {
+          btn.classList.remove("active");
+          btn.style.background = `linear-gradient(145deg, ${fruit.color}cc, ${fruit.color}ff)`;
+          btn.style.boxShadow = `0 4px 0 rgba(0,0,0,0.2), 0 6px 12px rgba(0,0,0,0.1)`;
+          btn.style.borderColor = "transparent";
+          btn.querySelector(".label").style.color = "#fff";
+          activeBtn = null;
+        };
+
+        window.speechSynthesis.speak(utter);
+      });
+
+      grid.appendChild(btn);
+    });
+  </script>
+</body>
+</html>
