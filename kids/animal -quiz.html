@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Animal Quiz</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;900&family=Fredoka+One&display=swap" rel="stylesheet"/>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:'Nunito',sans-serif;
+    background:linear-gradient(135deg,#e0f7fa,#f3e5f5);
+    min-height:100vh;
+    padding:16px;
+  }
+
+  /* TAB NAV */
+  .tabs{display:flex;gap:10px;justify-content:center;margin-bottom:20px}
+  .tab{
+    padding:10px 24px;border:none;border-radius:30px;font-size:16px;
+    font-family:'Fredoka One',cursive;cursor:pointer;transition:all .2s;
+    background:#fff;color:#888;box-shadow:0 3px 8px rgba(0,0,0,.1);
+  }
+  .tab.active{background:linear-gradient(135deg,#43cea2,#185a9d);color:#fff;box-shadow:0 4px 12px rgba(67,206,162,.4)}
+
+  .page{display:none}.page.active{display:block}
+
+  /* SHARED */
+  .game-title{
+    text-align:center;font-family:'Fredoka One',cursive;font-size:26px;
+    margin-bottom:6px;color:#333;
+  }
+  .game-sub{text-align:center;color:#666;margin-bottom:20px;font-size:14px}
+
+  /* ===== GAME 1: MATCH ===== */
+  .match-container{
+    display:flex;gap:12px;justify-content:center;align-items:stretch;
+    max-width:600px;margin:0 auto;flex-wrap:wrap;
+  }
+  .match-col{display:flex;flex-direction:column;gap:10px;flex:1;min-width:130px}
+  .match-col h3{text-align:center;color:#555;font-size:13px;margin-bottom:4px;text-transform:uppercase;letter-spacing:1px}
+
+  .animal-card,.home-card{
+    border-radius:16px;padding:12px 8px;text-align:center;cursor:pointer;
+    transition:all .25s;border:3px solid transparent;
+    background:#fff;box-shadow:0 3px 10px rgba(0,0,0,.1);
+  }
+  .animal-card .icon{font-size:36px}
+  .animal-card .name,.home-card .name{font-size:13px;font-weight:700;margin-top:4px;color:#444}
+  .home-card .icon{font-size:30px}
+
+  .animal-card.selected{border-color:#43cea2;background:#e8fdf6;transform:scale(1.05)}
+  .animal-card.matched{border-color:#4CAF50;background:#e8f5e9;cursor:default;opacity:.75}
+  .home-card.matched{border-color:#4CAF50;background:#e8f5e9;cursor:default;opacity:.75}
+  .home-card.wrong{animation:shake .4s;border-color:#f44336}
+  .home-card:hover:not(.matched){border-color:#43cea2}
+
+  .connector-area{display:flex;align-items:center;justify-content:center;padding:0 4px}
+  .connector-area svg{width:80px;height:100%}
+
+  .score-bar{
+    text-align:center;margin:16px auto;font-family:'Fredoka One',cursive;
+    font-size:20px;color:#185a9d;
+  }
+  .reset-btn{
+    display:block;margin:0 auto;padding:10px 28px;border:none;border-radius:30px;
+    background:linear-gradient(135deg,#f7971e,#ffd200);color:#fff;
+    font-family:'Fredoka One',cursive;font-size:16px;cursor:pointer;
+    box-shadow:0 4px 0 #c87a00;transition:transform .1s;
+  }
+  .reset-btn:active{transform:translateY(2px);box-shadow:0 2px 0 #c87a00}
+
+  /* ===== GAME 2: LETTER QUIZ ===== */
+  .quiz-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+    gap:14px;max-width:700px;margin:0 auto;
+  }
+  .quiz-card{
+    background:#fff;border-radius:18px;padding:14px;
+    box-shadow:0 3px 10px rgba(0,0,0,.1);
+    display:flex;align-items:center;gap:12px;
+  }
+  .quiz-card .animal-emoji{font-size:48px;min-width:56px;text-align:center}
+  .quiz-card .animal-label{font-size:12px;color:#888;margin-top:2px;text-align:center}
+  .options{display:flex;flex-wrap:wrap;gap:6px}
+  .opt-btn{
+    padding:6px 12px;border-radius:12px;border:2px solid #ddd;
+    font-family:'Fredoka One',cursive;font-size:18px;cursor:pointer;
+    background:#f9f9f9;transition:all .2s;color:#333;
+  }
+  .opt-btn:hover:not(:disabled){border-color:#43cea2;background:#e8fdf6}
+  .opt-btn.correct{border-color:#4CAF50;background:#e8f5e9;color:#2e7d32}
+  .opt-btn.wrong{border-color:#f44336;background:#ffebee;color:#c62828;animation:shake .4s}
+  .opt-btn:disabled{cursor:default}
+
+  .quiz-score{
+    text-align:center;margin:16px auto 8px;font-family:'Fredoka One',cursive;
+    font-size:20px;color:#185a9d;
+  }
+
+  @keyframes shake{
+    0%,100%{transform:translateX(0)}
+    20%{transform:translateX(-6px)}
+    40%{transform:translateX(6px)}
+    60%{transform:translateX(-4px)}
+    80%{transform:translateX(4px)}
+  }
+
+  .congrats{
+    display:none;text-align:center;padding:20px;
+    font-family:'Fredoka One',cursive;font-size:24px;color:#4CAF50;
+    animation:pop .4s ease;
+  }
+  @keyframes pop{from{transform:scale(.5);opacity:0}to{transform:scale(1);opacity:1}}
+</style>
+</head>
+<body>
+
+<!-- TABS -->
+<div class="tabs">
+  <button class="tab active" onclick="switchTab(0)">\ud83d\udc3e Match the Home</button>
+  <button class="tab" onclick="switchTab(1)">\ud83d\udd24 First Letter Quiz</button>
+</div>
+
+<!-- PAGE 1: MATCH -->
+<div class="page active" id="page0">
+  <p class="game-title">\ud83c\udfe0 Animal Homes</p>
+  <p class="game-sub">Tap an animal, then tap its home!</p>
+  <div class="score-bar" id="match-score">Matched: 0 / 5</div>
+
+  <div class="match-container">
+    <div class="match-col">
+      <h3>Animals</h3>
+      <div class="animal-card" data-animal="Dog"   onclick="selectAnimal(this)"><div class="icon">\ud83d\udc15</div><div class="name">Dog</div></div>
+      <div class="animal-card" data-animal="Cow"   onclick="selectAnimal(this)"><div class="icon">\ud83d\udc04</div><div class="name">Cow</div></div>
+      <div class="animal-card" data-animal="Horse" onclick="selectAnimal(this)"><div class="icon">\ud83d\udc34</div><div class="name">Horse</div></div>
+      <div class="animal-card" data-animal="Hen"   onclick="selectAnimal(this)"><div class="icon">\ud83d\udc14</div><div class="name">Hen</div></div>
+      <div class="animal-card" data-animal="Lion"  onclick="selectAnimal(this)"><div class="icon">\ud83e\udd81</div><div class="name">Lion</div></div>
+    </div>
+    <div class="match-col">
+      <h3>Homes</h3>
+      <div class="home-card" data-home="Kennel"  onclick="selectHome(this)"><div class="icon">\ud83c\udfe0</div><div class="name">Kennel</div></div>
+      <div class="home-card" data-home="Shed"    onclick="selectHome(this)"><div class="icon">\ud83d\uded6</div><div class="name">Shed</div></div>
+      <div class="home-card" data-home="Stable"  onclick="selectHome(this)"><div class="icon">\ud83c\udfda\ufe0f</div><div class="name">Stable</div></div>
+      <div class="home-card" data-home="Coop"    onclick="selectHome(this)"><div class="icon">\ud83e\udeb5</div><div class="name">Coop</div></div>
+      <div class="home-card" data-home="Den"     onclick="selectHome(this)"><div class="icon">\ud83d\udd73\ufe0f</div><div class="name">Den</div></div>
+    </div>
+  </div>
+
+  <div class="congrats" id="match-congrats">\ud83c\udf89 All Matched! Great Job! \ud83c\udf89</div>
+  <br>
+  <button class="reset-btn" onclick="resetMatch()">\ud83d\udd04 Play Again</button>
+</div>
+
+<!-- PAGE 2: LETTER QUIZ -->
+<div class="page" id="page1">
+  <p class="game-title">\ud83d\udd24 First Letter</p>
+  <p class="game-sub">Tap the correct letter for each animal!</p>
+  <div class="quiz-score" id="quiz-score">Score: 0 / 12</div>
+  <div class="quiz-grid" id="quiz-grid"></div>
+  <div class="congrats" id="quiz-congrats">\ud83c\udf1f Perfect Score! Amazing! \ud83c\udf1f</div>
+  <br>
+  <button class="reset-btn" onclick="resetQuiz()">\ud83d\udd04 Try Again</button>
+</div>
+
+<script>
+// ===== TAB =====
+function switchTab(n){
+  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',i===n));
+  document.querySelectorAll('.page').forEach((p,i)=>p.classList.toggle('active',i===n));
+}
+
+// ===== GAME 1: MATCH =====
+const correctPairs = {Dog:'Kennel', Cow:'Shed', Horse:'Stable', Hen:'Coop', Lion:'Den'};
+let selectedAnimal = null;
+let matchCount = 0;
+
+function selectAnimal(el){
+  if(el.classList.contains('matched')) return;
+  document.querySelectorAll('.animal-card').forEach(c=>c.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedAnimal = el;
+  speak(el.dataset.animal);
+}
+
+function selectHome(el){
+  if(!selectedAnimal) return;
+  if(el.classList.contains('matched')) return;
+  const animal = selectedAnimal.dataset.animal;
+  const home   = el.dataset.home;
+  if(correctPairs[animal] === home){
+    el.classList.add('matched');
+    selectedAnimal.classList.remove('selected');
+    selectedAnimal.classList.add('matched');
+    selectedAnimal = null;
+    matchCount++;
+    document.getElementById('match-score').textContent = `Matched: ${matchCount} / 5`;
+    speak(home);
+    if(matchCount===5){
+      document.getElementById('match-congrats').style.display='block';
+      speak("Excellent! All matched!");
+    }
+  } else {
+    el.classList.add('wrong');
+    setTimeout(()=>el.classList.remove('wrong'),500);
+    speak("Try again!");
+  }
+}
+
+function resetMatch(){
+  selectedAnimal=null; matchCount=0;
+  document.querySelectorAll('.animal-card,.home-card').forEach(c=>{
+    c.classList.remove('matched','selected','wrong');
+  });
+  document.getElementById('match-score').textContent='Matched: 0 / 5';
+  document.getElementById('match-congrats').style.display='none';
+}
+
+// ===== GAME 2: LETTER QUIZ =====
+const animals = [
+  {emoji:'\ud83d\udc14', name:'Hen',      letter:'H', opts:['Hh','Ss','Mm','Tt']},
+  {emoji:'\ud83e\udd88', name:'Shark',    letter:'S', opts:['Pp','Ss','Gg','Rr']},
+  {emoji:'\ud83d\udc2f', name:'Tiger',    letter:'T', opts:['Tt','Mm','Gg','Ee']},
+  {emoji:'
