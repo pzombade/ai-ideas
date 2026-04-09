@@ -94,8 +94,10 @@ body {
 
 .top-nav {
     display: flex;
-    justify-content: flex-end;
-    margin-bottom: -1.5rem; /* Pull header closer */
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 0.5rem;
 }
 
 .icon-btn {
