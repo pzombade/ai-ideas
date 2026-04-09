@@ -131,6 +131,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 cell.addEventListener('mousedown', () => handleCellClick(r, c));
                 cell.addEventListener('mouseenter', () => handleCellDrag(r, c));
                 
+                cell.addEventListener('touchstart', (e) => {
+                    e.preventDefault();
+                    handleCellClick(r, c);
+                }, { passive: false });
+                
                 gridEl.appendChild(cell);
             }
         }
@@ -798,6 +803,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Interactive Logic
     document.addEventListener('mouseup', handleCellUp);
+    document.addEventListener('touchend', handleCellUp);
+    document.addEventListener('touchmove', (e) => {
+        if (!isDragging) return;
+        e.preventDefault(); // Prevent scrolling while dragging puzzle
+        const touch = e.touches[0];
+        const el = document.elementFromPoint(touch.clientX, touch.clientY);
+        if (el && el.classList.contains('cell')) {
+            const r = parseInt(el.dataset.r);
+            const c = parseInt(el.dataset.c);
+            if (!isNaN(r) && !isNaN(c)) {
+                handleCellDrag(r, c);
+            }
+        }
+    }, { passive: false });
 
     function handleCellClick(r, c) {
         if (!startCell || !endCell) return;
