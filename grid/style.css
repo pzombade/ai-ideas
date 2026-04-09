@@ -357,24 +357,3 @@ main {
     stroke: #10b981 !important;
 }
 
-/* Intelligent Mobile Scaling */
-@media screen and (max-width: 600px) {
-    body {
-        overflow: hidden;
-        overscroll-behavior: none;
-        touch-action: none;
-    }
-    .app-container {
-        padding: 0.5rem;
-        gap: 0.5rem;
-    }
-    .level-selector, .floating-dock {
-        width: 95%;
-    }
-}
-
-@media screen and (max-width: 450px) {
-    .bg-shape {
-        opacity: 0.3; /* Less distracting on tight screens */
-    }
-}
