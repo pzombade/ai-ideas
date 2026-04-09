@@ -805,10 +805,16 @@ document.addEventListener("DOMContentLoaded", () => {
     document.addEventListener('mouseup', handleCellUp);
     document.addEventListener('touchend', handleCellUp);
     document.addEventListener('touchmove', (e) => {
-        if (!isDragging) return;
-        e.preventDefault(); // Prevent scrolling while dragging puzzle
         const touch = e.touches[0];
         const el = document.elementFromPoint(touch.clientX, touch.clientY);
+        
+        // Deeply block the browser scroll behavior if interacting anywhere inside grid
+        if (el && (el.classList.contains('cell') || el.classList.contains('grid') || el.closest('.grid-wrapper'))) {
+            e.preventDefault();
+        }
+        
+        if (!isDragging) return;
+        
         if (el && el.classList.contains('cell')) {
             const r = parseInt(el.dataset.r);
             const c = parseInt(el.dataset.c);
@@ -835,7 +841,19 @@ document.addEventListener("DOMContentLoaded", () => {
             isDragging = true;
             userPath = [[r, c]];
             updateUserPathVis();
-        } else if (userPath.length > 0) {
+        } 
+        else if (userPath.length === 0) {
+            // Check if adjacent to start cell
+            const dr = Math.abs(startCell[0] - r);
+            const dc = Math.abs(startCell[1] - c);
+            if (dr + dc === 1 && !hasWall(startCell[0], startCell[1], r, c)) {
+                startTimer();
+                isDragging = true;
+                userPath = [startCell, [r, c]];
+                updateUserPathVis();
+            }
+        }
+        else if (userPath.length > 0) {
             tryAddUserPath(r, c);
             isDragging = true;
         }
